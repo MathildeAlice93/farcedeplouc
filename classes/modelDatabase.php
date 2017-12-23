@@ -34,8 +34,8 @@
 			{
 				if(self::$pdo == NULL or $pdodb_name != "default")
 					/*Si la connexion n'existe pas ou on a spécifié un nom pour celle-ci, alors on crée une connexion.*/
-					/*Entre crochet tu crées des environnements, ici dans l'environnement de la fonction public static,
-					tu n'as pas créé la variable $pdo, donc tu sortir de ton environnment courant et du coup il faut utiliser self
+					/*Entre accolades tu crées des environnements, ici dans l'environnement de la fonction public static,
+					tu n'as pas créé la variable $pdo, donc tu dois sortir de ton environnment courant et du coup il faut utiliser self
 					*/
 				{
 					self::$cur_host = $host;
@@ -115,7 +115,7 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
-		public static function get_potes($id, $limit, $offset=0)
+		public static function get_potes($id, $limit, $offset=1)
 		{
 			try 
 			{
@@ -128,13 +128,11 @@
 						)
 						AND jp.statut = :statut
 					ORDER BY p.pseudo ASC
-					LIMIT :offset, :limit;"
+					LIMIT $offset, $limit;"
 				);
 				$statement->execute(array(
 					'id' => $id,
-					'statut' => "confirme", 
-					'offset' => $offset,
-					'limit' => $limit 
+					'statut' => "confirme"
 				));
 				return $statement->fetchAll(); 
 			}

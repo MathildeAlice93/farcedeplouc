@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
 	<title>Mon journal de plouc</title>
@@ -8,12 +7,16 @@
 </head>
 <body>
 coucou toi ! 
-	<form>
+	
+		
+			<?php
+				$affichage_potes = FarceDePloucDbUtilities::get_potes($plouc_connecte->getId(),1);
+				foreach($affichage_potes as $pote){
+					echo $pote['pseudo']; 
+				}
+			?>
+		<form>
 		<select name="potes_du_plouc" size="1">
-			<!--<?php
-				//$affichage_potes = get_potes()
-				//for ($i=0; $i < 7) 
-			?>-->
 		</select>
 	</form>
 

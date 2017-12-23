@@ -26,6 +26,6 @@
 	}
 	else
 	{
-		include "pages/connexion.php";
+		include "handlers/handleSession.php";
 	}
 ?>

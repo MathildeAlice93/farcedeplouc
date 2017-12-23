@@ -73,7 +73,7 @@
 				//traiter l'erreur plus tard (champs invalides)
 				include_once "pages/connexion.php";
 			}
-
+			break;
 		case 'zonmai':
 			include_once "pages/journal.php";
 			break;
