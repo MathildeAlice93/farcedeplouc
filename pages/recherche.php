@@ -12,10 +12,6 @@
 		<input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
 		<input type = "submit" name = "search_people_2" formaction = "router.php?handler=Session&action_du_plouc=recherche" value = "Lancer la recherche !" />
 	</form>
-	<?php echo $ma_recherche; 
-		$affichage_personne = FarceDePloucDbUtilities::searchPeople("k");
-		print_r($affichage_personne);
-	?>
 	<select name="recherche_personne" size="1">
 	<?php
 		$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche);

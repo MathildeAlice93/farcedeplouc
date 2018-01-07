@@ -81,6 +81,7 @@
 			if(isset($_POST['recherche']) and !empty($_POST['recherche']))
 			{
 				$ma_recherche = $_POST['recherche'];
+				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 				include_once "pages/recherche.php";
 			}
 			else 
