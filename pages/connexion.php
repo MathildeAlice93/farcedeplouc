@@ -41,11 +41,11 @@
 				<tr>
 					<td>Mot de passe top secret : </td>
 					<td>
-						<input type = "text" name = 'mot_de_passe' id = 'mot_de_passe'/>
+						<input type = "password" name = 'mot_de_passe' id = 'mot_de_passe'/>
 					</td>
 				</tr>
 			</table>
-		<input type = "submit" name = "submit" formaction = "router.php?handler=Registration" value = "Je rejoins le klan des ploucs" />
+		<input type = "submit" name = "registration" formaction = "router.php?handler=Registration" value = "Je rejoins le klan des ploucs" />
 
 	</form>
 	<form method="POST" action="router.php">
@@ -59,11 +59,11 @@
 				<tr>
 					<td>Mot de passe </td>
 					<td>
-						<input type = "text" name = 'connect_mot_de_passe' id = 'connect_mot_de_passe'/>
+						<input type = "password" name = 'connect_mot_de_passe' id = 'connect_mot_de_passe'/>
 					</td>
 				</tr>
 			</table>
-		<input type = "submit" name = "submit" formaction = "router.php?handler=Session&action_du_plouc=connexion" value = "Le klan des ploucs me manque !" />
+		<input type = "submit" name = "connexion" formaction = "router.php?handler=Session&action_du_plouc=connexion" value = "Le klan des ploucs me manque !" />
 
 	</form>
 </body>

@@ -115,7 +115,7 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
-		public static function get_potes($id, $limit, $offset=1)
+		public static function getPotes($id, $limit, $offset=0)
 		{
 			try 
 			{
@@ -143,7 +143,8 @@
 		}
 		public static function isValidPerson($courriel, $mot_de_passe)
 		{
-			try{
+			try
+			{
 				$statement = self::$pdo->prepare(
 					"SELECT *
 					FROM personne
@@ -162,6 +163,25 @@
 				{
 					return false;
 				}
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		public static function searchPeople($wanted_plouc)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"SELECT *
+					FROM personne
+					WHERE personne.nom = :wanted_plouc OR personne.pseudo = :wanted_plouc OR personne.prenom = :wanted_plouc;"
+				);	
+				$statement->execute(array(
+					'wanted_plouc' => $wanted_plouc
+				));
+				return $statement->fetchAll();
 			}
 			catch(Exception $e)
 			{

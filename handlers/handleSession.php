@@ -64,7 +64,7 @@
 				}
 				else
 				{
-					//erreur (personne pas dans base de donnnées)
+					//erreur (personne pas dans base de donnnées) (plus tard)
 					include_once "pages/connexion.php";
 				}
 			}
@@ -76,6 +76,18 @@
 			break;
 		case 'zonmai':
 			include_once "pages/journal.php";
+			break;
+		case 'recherche':
+			if(isset($_POST['recherche']) and !empty($_POST['recherche']))
+			{
+				$ma_recherche = $_POST['recherche'];
+				include_once "pages/recherche.php";
+			}
+			else 
+			{
+				//erreur pas de recherche faite (plus tard)
+				include_once "pages/journal.php";
+			}
 			break;
 		default:
 			/* ici on sera déconnecté en cas d'action erronée (que le site ne prévoit pas) pour éviter toute possibilité de risque */
