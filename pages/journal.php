@@ -10,10 +10,19 @@
 //Ici on devra faire appel à une classe non statique 'Personne' 
 echo "Coucou " . $plouc_connecte->getPrenom(); 
 ?></br>
-	
+	<table>
+	<?php
+		$_SESSION["mes_infos"] = FarceDePloucDbUtilities::getInfos($plouc_connecte->getId());
+		echo $_SESSION["mes_infos"][0]["nom"] . "</br>";
+		echo $_SESSION["mes_infos"][0]["prenom"] . "</br>";
+		echo $_SESSION["mes_infos"][0]["pseudo"] . "</br>";
+		echo $_SESSION["mes_infos"][0]["date_anniversaire"] . "</br>";
+	?>
+	</table>
 	<select name="potes_du_plouc" size="1">
 	<?php
 			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),7);
+			
 			//Ici on utilise "::" car on fait un appel de classe statique cad qu'on a une seule et unique instance 
 			foreach($affichage_potes as $pote){
 				$truc=$pote['pseudo'];

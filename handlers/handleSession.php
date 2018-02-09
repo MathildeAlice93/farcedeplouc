@@ -75,6 +75,10 @@
 			}
 			break;
 		case 'zonmai':
+			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+			
+			// ces deux appels de fonctions vont te permettre de récolter les données personnels dont tu auras besoin lors de l'affichage
+			// remarque : l'affichage se passe directement dans la page 'journal'
 			include_once "pages/journal.php";
 			break;
 		case 'recherche':

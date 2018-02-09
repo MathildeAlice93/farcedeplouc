@@ -141,6 +141,22 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
+		public static function getInfos($id)
+		{
+			try 
+			{
+				$statement = self::$pdo->prepare(
+					"CALL afficher_infos($id);"
+				);
+				$statement->execute(array());
+				return $statement->fetchAll(); 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		
 		public static function isValidPerson($courriel, $mot_de_passe)
 		{
 			try
