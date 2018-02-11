@@ -101,7 +101,7 @@
 			try
 			{
 				$statement = self::$pdo->prepare(
-					"INSERT INTO addJoint_personne(id_demandeur, id_receveur, statut, date_demande, date_traitement)
+					"INSERT INTO joint_personne(id_demandeur, id_receveur, statut, date_demande, date_traitement)
 						VALUES (:id_demandeur, :id_receveur, :statut, CURRENT_TIMESTAMP, NULL);"
 				);
 				$statement->execute(array(

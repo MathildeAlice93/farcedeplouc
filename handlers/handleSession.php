@@ -10,6 +10,7 @@
 	/*Est-ce que la variable de session plouc_connecte existe et contient des données*/
 	{
 		$plouc_connecte = unserialize($_SESSION['plouc_connecte']);
+		echo "on est laa";
 		/*récupération du contenu de la variable plouc_connecte sous forme de string, introduit dans l'ojet $plouc_connecte*/
 	}
 	else
@@ -90,6 +91,23 @@
 			{
 				$ma_recherche = $_POST['recherche'];
 				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+				$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche);
+				include_once "pages/recherche.php";
+			}
+			else 
+			{
+				//erreur pas de recherche faite (plus tard)
+				include_once "pages/journal.php";
+			}
+			break;
+		case 'ajouter_un_pote':
+			if(isset($_POST['nouveaux_potes']) and !empty($_POST['nouveaux_potes']))
+			{
+				$mon_nouveau_pote = $_POST['nouveaux_potes'];
+				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+				$id_demandeur=$plouc_connecte->getId();
+				echo $id_demandeur;
+				FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "confirme");
 				include_once "pages/recherche.php";
 			}
 			else 
