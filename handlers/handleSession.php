@@ -60,6 +60,10 @@
 						$plouc_connecte->setCourriel($row['courriel']); 
 						$plouc_connecte->setMot_de_passe($row['mot_de_passe']);
 					}
+
+					$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),7);
+					//Ici on utilise "::" car on fait un appel de classe statique cad qu'on a une seule et unique instance
+
 					include_once "pages/journal.php";
 				}
 				else
@@ -76,7 +80,7 @@
 			break;
 		case 'zonmai':
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-			
+			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),7);
 			// ces deux appels de fonctions vont te permettre de récolter les données personnels dont tu auras besoin lors de l'affichage
 			// remarque : l'affichage se passe directement dans la page 'journal'
 			include_once "pages/journal.php";
