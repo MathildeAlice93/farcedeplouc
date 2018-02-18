@@ -98,6 +98,10 @@
 		public static function addJoint_personne($id_demandeur, $id_receveur, $statut)
 		/*static : veut dire qu'il s'agit d'une classe statique qui a une instance unique*/
 		{
+			if (self::verifyExistingRelationship($id_demandeur, $id_receveur)){
+			/*j'appelle une fonction de la propre classe (model database)*/
+				return 0; 
+			}
 			try
 			{
 				$statement = self::$pdo->prepare(
@@ -107,8 +111,36 @@
 				$statement->execute(array(
 					'id_demandeur' => $id_demandeur, 
 					'id_receveur' => $id_receveur, 
-					'statut' => "en_attente"
-				)); 
+					'statut' => "confirme"
+				));
+				return 1; 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		public static function verifyExistingRelationship($id_demandeur, $id_receveur)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					/*on insère des variables php dans une requête mysql*/
+					"SELECT id_demandeur, id_receveur 
+					FROM joint_personne
+					WHERE id_demandeur = :id_demandeur AND id_receveur = :id_receveur 
+					OR id_demandeur = :id_receveur AND id_receveur = :id_demandeur;"
+				);
+				$statement->execute(array(
+					'id_demandeur' => $id_demandeur, 
+					'id_receveur' => $id_receveur	
+				));
+				$resultat = $statement->fetchAll();
+				if (!empty($resultat)){
+					return TRUE; 
+				} else {
+					return FALSE; 
+				}
 			}
 			catch(Exception $e)
 			{

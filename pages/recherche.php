@@ -12,17 +12,24 @@
 		<input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
 		<input type = "submit" name = "search_people_2" formaction = "router.php?handler=Session&action_du_plouc=recherche" value = "Lancer la recherche !" />
 	</form>
+
+
 	<form method="POST">
-		<select name="nouveaux_potes">
-		<?php
-			foreach($affichage_personne as $personne){
-				$truc=$personne['pseudo'];
-				$truc_id = $personne['id'];
-				echo "<option value='$truc_id'>$truc</option>"; 
-			}
-		?>
-		</select>
-		<input type="submit" name="add_friend" formaction="router.php?handler=Session&action_du_plouc=ajouter_un_pote" value="J'ajoute mon pote!"/>
+		<table>		
+			<?php
+				foreach($affichage_personne as $personne){
+					echo '<tr>';
+					echo "<td>".$personne['pseudo']."</td>";
+					echo "<td>".$personne['prenom']."</td>";
+					echo "<td>".$personne['nom']."</td>";
+					$test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id']);			
+					if ($test_amitie){
+						echo "<td> <input type='submit' name='tralala[]' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=ajouter_un_pote'/> </td>";				
+					}
+				}
+				echo '</tr>';
+			?>
+		</table>
 	</form>
 
 

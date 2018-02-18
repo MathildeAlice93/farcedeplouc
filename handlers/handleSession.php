@@ -100,13 +100,13 @@
 			}
 			break;
 		case 'ajouter_un_pote':
-			if(isset($_POST['nouveaux_potes']) and !empty($_POST['nouveaux_potes']))
+			if(isset($_POST['tralala']) and !empty($_POST['tralala']))
 			{
-				$mon_nouveau_pote = $_POST['nouveaux_potes'];
+				$mon_nouveau_pote = $_POST['tralala'][0];
 				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 				$id_demandeur=$plouc_connecte->getId();
 				FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "confirme");
-				include_once "pages/recherche.php";
+				include_once "pages/journal.php";
 			}
 			else 
 			{
