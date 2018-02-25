@@ -6,6 +6,13 @@
 	<meta name = "author" content = "Mathilde Alice Stiernet"/>
 </head>
 <body>
+	<form method='POST'>
+		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=default">Déconnexion</button>
+	</form>
+
+	<form method='POST'>
+		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=zonmai">Retour</button>
+	</form>
 
 	<form method="POST">
 		<label for="recherche">Ma recherche: </label>
@@ -23,8 +30,11 @@
 					echo "<td>".$personne['prenom']."</td>";
 					echo "<td>".$personne['nom']."</td>";
 					$test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id']);			
-					if ($test_amitie){
-						echo "<td> <input type='submit' name='tralala[]' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=ajouter_un_pote'/> </td>";				
+					if (!$test_amitie){
+						echo "<form method='POST'>";
+						echo "<td> <button type='submit' name='tralala' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=ajouter_un_pote'>Ajouter un ami!</button> </td>";	
+						/* Pour distinguer les différents buttons qui apparaissent sur la page, tralala est une liste qui contient autant d'éléments qu'il n'y a de boutons sur la page */
+						echo "</form>";			
 					}
 				}
 				echo '</tr>';
