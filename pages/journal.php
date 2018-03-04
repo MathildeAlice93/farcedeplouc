@@ -38,5 +38,9 @@
 		<input type = "submit" name = "search_people" formaction = "router.php?handler=Session&action_du_plouc=recherche" value = "Lancer la recherche !" />
 	</form>
 
+	<form method="POST">
+		<input type = "submit" name = "create_convers" formaction = "router.php?handler=Session&action_du_plouc=create_conversation" value = "Je teste la creation de convers !" />
+	</form>
+
 </body>
 </html> 

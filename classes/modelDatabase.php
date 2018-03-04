@@ -236,5 +236,53 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
+		private static function createConversation($public, $nom=NULL)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"INSERT INTO conversation(id, date_creation, nom, public) 
+					VALUES (NULL, CURRENT_TIMESTAMP, :nom, :public);"
+				);	
+				$statement->execute(array(
+					':nom' => $nom,
+					':public' => $public
+				));
+				return self::$pdo->lastInsertId();
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		private static function addPeopleToConversation($id_conversation, $id_personne)
+		/*Ici j'ai mis la fonction en private car elle n'est sensée etre appelee que par createConversationWith, pas par l'utilisateur directement */
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_creation) 
+					VALUES (:id_conversation, :id_personne, NULL, CURRENT_TIMESTAMP);"
+				);
+				$statement->execute(array(
+					':id_conversation' => $id_conversation,
+					':id_personne' => $id_personne
+				));
+				return 1; 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		public static function createConversationWith($public, $mon_id, $id_personne, $nom=NULL)
+		{
+			$id_convers = self::createConversation($public, $nom);
+			self::addPeopleToConversation($id_convers, $id_personne);
+			self::addPeopleToConversation($id_convers, $mon_id);
+			return $id_convers; 
+			/*Pas de try / catch car ceux-ci sont effectués dans l'appel des autres fonctions */
+		}		
+
 	}
 ?>

@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.4
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
--- Client :  127.0.0.1
--- Généré le :  Dim 04 Mars 2018 à 11:32
--- Version du serveur :  5.7.14
--- Version de PHP :  7.0.10
+-- Hôte : 127.0.0.1:3306
+-- Généré le :  Dim 04 mars 2018 à 14:22
+-- Version du serveur :  5.7.19
+-- Version de PHP :  5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -41,12 +43,31 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `conversation`;
-CREATE TABLE `conversation` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `conversation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `date_creation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `nom` varchar(255) COLLATE utf8_bin NOT NULL,
-  `public` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `nom` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `public` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Déchargement des données de la table `conversation`
+--
+
+INSERT INTO `conversation` (`id`, `date_creation`, `nom`, `public`) VALUES
+(1, '2018-03-04 13:28:01', NULL, 1),
+(2, '2018-03-04 13:28:24', NULL, 1),
+(3, '2018-03-04 13:30:24', '', 1),
+(4, '2018-03-04 13:30:35', '', 1),
+(5, '2018-03-04 13:31:15', NULL, 1),
+(6, '2018-03-04 13:37:10', NULL, 1),
+(7, '2018-03-04 13:47:53', NULL, 1),
+(8, '2018-03-04 14:11:06', NULL, 0),
+(9, '2018-03-04 14:11:36', NULL, 0),
+(10, '2018-03-04 14:15:02', NULL, 0),
+(11, '2018-03-04 14:18:02', NULL, 0),
+(12, '2018-03-04 14:18:23', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -55,11 +76,29 @@ CREATE TABLE `conversation` (
 --
 
 DROP TABLE IF EXISTS `joint_conversation_personne`;
-CREATE TABLE `joint_conversation_personne` (
+CREATE TABLE IF NOT EXISTS `joint_conversation_personne` (
   `id_conversation` int(11) NOT NULL,
   `id_personne` int(11) NOT NULL,
-  `date_lecture` timestamp NOT NULL
+  `date_lecture` timestamp NULL DEFAULT NULL,
+  `date_creation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_conversation`,`id_personne`),
+  KEY `id_conversation` (`id_conversation`),
+  KEY `id_personne` (`id_personne`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Déchargement des données de la table `joint_conversation_personne`
+--
+
+INSERT INTO `joint_conversation_personne` (`id_conversation`, `id_personne`, `date_lecture`, `date_creation`) VALUES
+(8, 12, NULL, '2018-03-04 14:16:59'),
+(8, 24, NULL, '2018-03-04 14:16:59'),
+(9, 12, NULL, '2018-03-04 14:16:59'),
+(9, 25, NULL, '2018-03-04 14:16:59'),
+(10, 5, NULL, '2018-03-04 14:16:59'),
+(10, 25, NULL, '2018-03-04 14:16:59'),
+(12, 5, NULL, '2018-03-04 14:18:23'),
+(12, 24, NULL, '2018-03-04 14:18:23');
 
 -- --------------------------------------------------------
 
@@ -68,16 +107,18 @@ CREATE TABLE `joint_conversation_personne` (
 --
 
 DROP TABLE IF EXISTS `joint_personne`;
-CREATE TABLE `joint_personne` (
+CREATE TABLE IF NOT EXISTS `joint_personne` (
   `id_demandeur` int(11) NOT NULL,
   `id_receveur` int(11) NOT NULL,
   `statut` enum('confirme','en_attente','refuse') NOT NULL,
   `date_demande` timestamp NOT NULL,
-  `date_traitement` timestamp NULL DEFAULT NULL
+  `date_traitement` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id_demandeur`,`id_receveur`),
+  KEY `FK_id_receveur` (`id_receveur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `joint_personne`
+-- Déchargement des données de la table `joint_personne`
 --
 
 INSERT INTO `joint_personne` (`id_demandeur`, `id_receveur`, `statut`, `date_demande`, `date_traitement`) VALUES
@@ -85,6 +126,8 @@ INSERT INTO `joint_personne` (`id_demandeur`, `id_receveur`, `statut`, `date_dem
 (5, 12, 'en_attente', '2018-02-18 12:42:39', NULL),
 (5, 17, 'en_attente', '2018-02-18 12:46:35', NULL),
 (5, 18, 'confirme', '2018-02-18 12:47:56', NULL),
+(5, 24, 'confirme', '2018-03-04 14:14:51', NULL),
+(5, 25, 'confirme', '2018-03-04 14:14:02', NULL),
 (6, 12, 'confirme', '2017-12-23 17:57:13', '2017-12-23 17:57:13'),
 (12, 14, 'confirme', '2018-02-25 20:58:10', NULL),
 (12, 15, 'confirme', '2018-02-25 21:06:27', NULL),
@@ -103,12 +146,15 @@ INSERT INTO `joint_personne` (`id_demandeur`, `id_receveur`, `statut`, `date_dem
 --
 
 DROP TABLE IF EXISTS `message`;
-CREATE TABLE `message` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_conversation` int(11) NOT NULL,
   `expediteur` int(11) NOT NULL,
   `contenu` text NOT NULL,
-  `date` datetime NOT NULL
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_id_conversation` (`id_conversation`),
+  KEY `FK_id_personne` (`expediteur`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -118,19 +164,21 @@ CREATE TABLE `message` (
 --
 
 DROP TABLE IF EXISTS `personne`;
-CREATE TABLE `personne` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `personne` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) NOT NULL,
   `prenom` varchar(255) NOT NULL,
   `pseudo` varchar(255) NOT NULL,
   `date_anniversaire` date DEFAULT NULL,
   `date_inscription` timestamp NOT NULL,
   `courriel` varchar(255) NOT NULL,
-  `mot_de_passe` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `mot_de_passe` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `courriel` (`courriel`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 --
--- Contenu de la table `personne`
+-- Déchargement des données de la table `personne`
 --
 
 INSERT INTO `personne` (`id`, `nom`, `prenom`, `pseudo`, `date_anniversaire`, `date_inscription`, `courriel`, `mot_de_passe`) VALUES
@@ -152,66 +200,7 @@ INSERT INTO `personne` (`id`, `nom`, `prenom`, `pseudo`, `date_anniversaire`, `d
 (28, 'test', 'test', 'y', '2018-01-01', '2018-02-25 21:51:39', 'test3', 'test3');
 
 --
--- Index pour les tables exportées
---
-
---
--- Index pour la table `conversation`
---
-ALTER TABLE `conversation`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `joint_conversation_personne`
---
-ALTER TABLE `joint_conversation_personne`
-  ADD PRIMARY KEY (`id_conversation`,`id_personne`),
-  ADD KEY `id_conversation` (`id_conversation`),
-  ADD KEY `id_personne` (`id_personne`);
-
---
--- Index pour la table `joint_personne`
---
-ALTER TABLE `joint_personne`
-  ADD PRIMARY KEY (`id_demandeur`,`id_receveur`),
-  ADD KEY `FK_id_receveur` (`id_receveur`);
-
---
--- Index pour la table `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_id_conversation` (`id_conversation`),
-  ADD KEY `FK_id_personne` (`expediteur`) USING BTREE;
-
---
--- Index pour la table `personne`
---
-ALTER TABLE `personne`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `courriel` (`courriel`);
-
---
--- AUTO_INCREMENT pour les tables exportées
---
-
---
--- AUTO_INCREMENT pour la table `conversation`
---
-ALTER TABLE `conversation`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `message`
---
-ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT pour la table `personne`
---
-ALTER TABLE `personne`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
---
--- Contraintes pour les tables exportées
+-- Contraintes pour les tables déchargées
 --
 
 --
@@ -234,6 +223,7 @@ ALTER TABLE `joint_personne`
 ALTER TABLE `message`
   ADD CONSTRAINT `FK_id_conversation` FOREIGN KEY (`id_conversation`) REFERENCES `conversation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `FK_id_expediteur` FOREIGN KEY (`expediteur`) REFERENCES `personne` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -112,6 +112,14 @@
 				include_once "pages/journal.php";
 			}
 			break;
+		case 'create_conversation': 
+			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+			// ces deux appels de fonctions vont te permettre de récolter les données personnels dont tu auras besoin lors de l'affichage
+			// remarque : l'affichage se passe directement dans la page 'journal'
+			$nouveau_pote_convers = $_POST['tralala'];
+			$mon_id = $plouc_connecte->getId(); 
+			echo FarceDePloucDbUtilities::createConversationWith(0, $mon_id, $nouveau_pote_convers);
+			break;
 		default:
 			/* ici on sera déconnecté en cas d'action erronée (que le site ne prévoit pas) pour éviter toute possibilité de risque */
 			session_destroy();
