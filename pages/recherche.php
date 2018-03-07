@@ -38,7 +38,7 @@
 					}
 					else{
 						echo "<form method='POST'>";
-						echo "<td> <button type='submit' name='tralala' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=create_conversation'>Causer ac mon pote!</button> </td>";	
+						echo "<td> <button type='submit' name='tralala' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=messenger'>Causer ac mon pote!</button> </td>";	
 						/*Pas nécessaire de changer le nom tralala en autre chose vu que de toute façon si j'affiche un des deux boutons l'autre ne sera pas affiché !*/
 						echo "</form>";	
 					}

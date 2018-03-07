@@ -120,6 +120,25 @@
 			$mon_id = $plouc_connecte->getId(); 
 			echo FarceDePloucDbUtilities::createConversationWith(0, $mon_id, $nouveau_pote_convers);
 			break;
+		case 'messenger':
+			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+			$nouveau_pote_convers = $_POST['tralala'];
+			$mon_id = $plouc_connecte->getId();
+			$id_conversation = FarceDePloucDbUtilities::existeConversationPrive($nouveau_pote_convers, $mon_id);
+			$previous_messages = NULL;
+			if(!empty($id_conversation[0]))
+			{
+				$id_conversation = $id_conversation[0]["id_conversation"];
+				/* une conversation existe deja il faut l'afficher */
+				$previous_messages = FarceDePloucDbUtilities::getAllMessagesFromConversation($id_conversation);
+			}
+			else
+			{
+				/* on cree une nouvelle conversation (aucun message deja ecrit) */
+				FarceDePloucDbUtilities::createConversationWith(0, $mon_id, $nouveau_pote_convers);
+			}
+			include_once "pages/messenger.php";
+			break;
 		default:
 			/* ici on sera déconnecté en cas d'action erronée (que le site ne prévoit pas) pour éviter toute possibilité de risque */
 			session_destroy();
