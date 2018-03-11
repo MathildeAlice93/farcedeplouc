@@ -341,7 +341,7 @@
 			try
 			{
 				$statement = self::$pdo->prepare(
-					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, 'date')
+					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date`)
 						VALUES (NULL, :id_convers, :id_personne, :contenu, CURRENT_TIMESTAMP);"
 				);
 				$statement->execute(array(

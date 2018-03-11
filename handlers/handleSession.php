@@ -139,6 +139,18 @@
 			}
 			include_once "pages/messenger.php";
 			break;
+		case 'poster_un_message':
+			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+			//recopiage case messenger
+			$mon_id = $plouc_connecte->getId();
+			$id_conversation = 8;
+			//ajout du nouveau message
+			$contenu_post = $_POST['nouveau_message'];
+			FarceDePloucDbUtilities::postMessage($mon_id, $id_conversation, $contenu_post);
+			//recup tous les messages precedents recopiage messenger
+			$previous_messages = FarceDePloucDbUtilities::getAllMessagesFromConversation($id_conversation);
+			include_once "pages/messenger.php";
+			break;
 		default:
 			/* ici on sera déconnecté en cas d'action erronée (que le site ne prévoit pas) pour éviter toute possibilité de risque */
 			session_destroy();

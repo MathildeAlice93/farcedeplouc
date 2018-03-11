@@ -7,9 +7,9 @@
 </head>
 <body>
     <?php
-        if(isset($previous_message))
+        if(isset($previous_messages))
         {
-            foreach($previous_message as $message)
+            foreach($previous_messages as $message)
             {
                 echo "<div>";
                 echo $message["contenu"];
@@ -17,5 +17,10 @@
             }
         }
     ?>
+    <form method="POST">
+        <textarea name="nouveau_message" placeholder="Que veux-tu raconter?" rows="3" cols="30"></textarea>
+        <input type = "submit" name = "post_message" formaction = "router.php?handler=Session&action_du_plouc=poster_un_message" value = "Je cause!" />
+	</form>
+
 </body>
 </html> 
