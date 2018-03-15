@@ -14,7 +14,7 @@
 	}
 	else
 	{
-		$plouc_connecte = new personne; 
+		$plouc_connecte = new Personne; 
 
 		/*création de l'objet personne, mis dans la variable $plouc_connecte*/
 		$_SESSION['plouc_connecte'] = serialize($plouc_connecte); 
@@ -122,21 +122,32 @@
 			break;
 		case 'messenger':
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-			$nouveau_pote_convers = $_POST['tralala'];
-			$mon_id = $plouc_connecte->getId();
-			$id_conversation = FarceDePloucDbUtilities::existeConversationPrive($nouveau_pote_convers, $mon_id);
-			$previous_messages = NULL;
-			if(!empty($id_conversation[0]))
+			if(isset($_SESSION['current_conversation'])) 
 			{
-				$id_conversation = $id_conversation[0]["id_conversation"];
-				/* une conversation existe deja il faut l'afficher */
-				$previous_messages = FarceDePloucDbUtilities::getAllMessagesFromConversation($id_conversation);
+				$current_conversation = unserialize($_SESSION['current_conversation']);
 			}
 			else
 			{
-				/* on cree une nouvelle conversation (aucun message deja ecrit) */
-				FarceDePloucDbUtilities::createConversationWith(0, $mon_id, $nouveau_pote_convers);
+				$current_conversation = new Conversation;
+				$membres = [];
+				$membres[] = $plouc_connecte->getId();
+				$membres[] = $_POST['tralala'];
+				$current_conversation->setMembres($membres);
+				$fetched_id_conversation = FarceDePloucDbUtilities::existeConversationPrive($membres[0], $membres[1]);
+				if(!empty($fetched_id_conversation[0]))
+				{
+					$current_conversation->setId($fetched_id_conversation[0]["id_conversation"]);
+					/* une conversation existe deja il faut l'afficher */
+					$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
+				}
+				else
+				{
+					/* on cree une nouvelle conversation (aucun message deja ecrit) */
+					$current_conversation->setId(FarceDePloucDbUtilities::createConversationWith(0, $membres[0], $membres[1]));
+				}
+				$_SESSION['current_conversation'] = serialize($current_conversation); 
 			}
+			
 			include_once "pages/messenger.php";
 			break;
 		case 'poster_un_message':
@@ -144,6 +155,7 @@
 			//recopiage case messenger
 			$mon_id = $plouc_connecte->getId();
 			$id_conversation = 8;
+			//$id=$current_conversation->getId()
 			//ajout du nouveau message
 			$contenu_post = $_POST['nouveau_message'];
 			FarceDePloucDbUtilities::postMessage($mon_id, $id_conversation, $contenu_post);
@@ -163,6 +175,10 @@
 	/*Est-ce que la variable de session plouc_connecte existe et contient des données*/
 	{
 		$_SESSION['plouc_connecte'] = serialize($plouc_connecte);
+	}
+	if(isset($_SESSION['current_conversation'])) 
+	{
+		$_SESSION['current_conversation'] = serialize($current_conversation);
 	}
 ?>
 

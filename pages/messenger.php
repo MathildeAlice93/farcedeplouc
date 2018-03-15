@@ -7,6 +7,7 @@
 </head>
 <body>
     <?php
+        $previous_messages = $current_conversation->getMessages();
         if(isset($previous_messages))
         {
             foreach($previous_messages as $message)

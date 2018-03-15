@@ -6,6 +6,7 @@
 	/* inclusions */
 	include_once "classes/modelDatabase.php";
 	include_once "classes/modelPersonne.php";
+	include_once "classes/modelConversation.php";
 
 	
 	/* default connection parameters */
