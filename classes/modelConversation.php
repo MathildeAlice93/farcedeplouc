@@ -13,18 +13,19 @@
         /*Attributs*/
 		private $id;
 		private $date_creation; 
-		private $nom; 
+		private $titre; 
 		private $public; 
-        private $membres; 
+		private $membres; 
+		private $messages;
         
         		/*Consturcteur de la classe personne*/
 
-		public function __construct($id="", $date_creation=NULL, $nom="", $public="", $membres=[], $messages=NULL)
+		public function __construct($id="", $date_creation=NULL, $titre="", $public="", $membres=[], $messages=NULL)
 		{
 			$this->id = $id; 
-			/*$this sert à dire que le programme doit aller voir son attribut nom et lui attribuer la valeur dans la variable $nom*/
+			/*$this sert à dire que le programme doit aller voir son attribut nom et lui attribuer la valeur dans la variable $titre*/
 			$this->date_creation = $date_creation; 
-			$this->nom = $nom; 
+			$this->titre = $titre; 
 			$this->public = $public; 
             $this->membres = $membres;
             $this->messages = $messages;
@@ -38,7 +39,7 @@
 
 		public function getDate_creation()
 		{
-			return $this->nom; 
+			return $this->titre; 
 		}
 
 		public function getNom()
@@ -67,9 +68,9 @@
         {
             $this->date_creation = $date_creation;
         }
-        public function setNom($nom)
+        public function setNom($titre)
         {
-            $this->nom = $nom;
+            $this->titre = $titre;
         }
         public function setPublic($public)
         {

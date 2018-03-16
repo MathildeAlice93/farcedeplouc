@@ -6,6 +6,44 @@
 	<meta name = "author" content = "Mathilde Alice Stiernet"/>
 </head>
 <body>
+    <form method='POST'>
+		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=default">Déconnexion</button>
+	</form>
+
+	<form method='POST'>
+		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=zonmai">Retour</button>
+	</form>
+
+    <form method="POST">
+		<table>		
+			<?php
+				foreach($affichage_conversations as $conversation){
+                    echo '<tr>';
+                    $affichage_membres_conversation = FarceDePloucDbUtilities::getMembresConversation($conversation['id']);
+                    if(empty($conversation['titre']))
+                    {
+                        $les_membres = "";
+                        foreach($affichage_membres_conversation as $membre)
+                        {
+                            $les_membres = $les_membres . $membre['pseudo'] . ", ";
+                        }
+                        echo "<td>".$les_membres."</td>";
+                    }
+                    else
+                    {
+                        echo "<td>".$conversation['titre']."</td>";
+                    }		
+                    echo "<form method='POST'>";
+                    echo "<td> <button type='submit' name='tralala' value = '".$conversation['id']."' formaction='router.php?handler=Session&action_du_plouc=switch_conversation'>Causer ac mon pote!</button> </td>";	
+                    /*Pas nécessaire de changer le nom tralala en autre chose vu que de toute façon si j'affiche un des deux boutons l'autre ne sera pas affiché !*/
+                    echo "</form>";	
+                    echo '</tr>';
+				}
+				
+			?>
+		</table>
+	</form>
+
     <?php
         $previous_messages = $current_conversation->getMessages();
         if(isset($previous_messages))

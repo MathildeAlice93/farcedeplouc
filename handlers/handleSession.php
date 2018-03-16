@@ -122,6 +122,10 @@
 			break;
 		case 'messenger':
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+			//liste toutes les conversations en cours
+			$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
+
+			//affiche les messages de la conversation sélectionnée
 			if(isset($_SESSION['current_conversation'])) 
 			{
 				$current_conversation = unserialize($_SESSION['current_conversation']);
@@ -152,15 +156,20 @@
 			break;
 		case 'poster_un_message':
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-			//recopiage case messenger
-			$mon_id = $plouc_connecte->getId();
-			$id_conversation = 8;
-			//$id=$current_conversation->getId()
-			//ajout du nouveau message
+			$current_conversation = unserialize($_SESSION['current_conversation']);
 			$contenu_post = $_POST['nouveau_message'];
-			FarceDePloucDbUtilities::postMessage($mon_id, $id_conversation, $contenu_post);
-			//recup tous les messages precedents recopiage messenger
-			$previous_messages = FarceDePloucDbUtilities::getAllMessagesFromConversation($id_conversation);
+			FarceDePloucDbUtilities::postMessage($plouc_connecte->getId(), $current_conversation->getId(), $contenu_post);
+			$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
+			include_once "pages/messenger.php";
+			break;
+		case 'switch_conversation':
+			//incomplet (manque les membres)
+			$current_conversation = new Conversation;
+			$id_conversation = $_POST['tralala'];
+			$current_conversation->setId($id_conversation);
+				/* une conversation existe deja il faut l'afficher */
+			$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
+			$_SESSION['current_conversation'] = serialize($current_conversation); 
 			include_once "pages/messenger.php";
 			break;
 		default:

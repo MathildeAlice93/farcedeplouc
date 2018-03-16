@@ -316,14 +316,14 @@
 			try
 			{
 				$statement = self::$pdo->prepare(
-					"SELECT conversation.nom, personne.pseudo, contenu, 'date'
+					"SELECT conversation.titre, personne.pseudo, contenu, `date`
 					FROM message
 						JOIN conversation
 							ON conversation.id = message.id_conversation
 						JOIN personne 
 							ON personne.id = message.id_expediteur
 					WHERE conversation.id = :id_conversation
-					ORDER BY 'date'; "
+					ORDER BY `date`; "
 				);
 				$statement->execute(array(
 					':id_conversation' => $id_conversation
@@ -355,6 +355,48 @@
 			{
 				die('Erreur : '.$e->getMessage());
 			}
+		}
+		public static function getConversations($id_connecte)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"SELECT conversation.*
+					FROM conversation
+						JOIN joint_conversation_personne  
+						ON conversation.id = joint_conversation_personne.id_conversation
+					WHERE joint_conversation_personne.id_personne = :id_connecte;"
+				);
+				$statement->execute(array(
+					':id_connecte' => $id_connecte
+				));
+				return $statement->fetchAll();;	
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
 		}	
+		public static function getMembresConversation($id_conversation)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"SELECT personne.pseudo
+					FROM joint_conversation_personne 
+						JOIN personne
+						ON joint_conversation_personne.id_personne = personne.id
+					WHERE joint_conversation_personne.id_conversation = :id_conversation;"
+				);
+				$statement->execute(array(
+					':id_conversation' => $id_conversation
+				));
+				return $statement->fetchAll();;	
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
 	}
 ?>

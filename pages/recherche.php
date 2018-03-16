@@ -42,8 +42,8 @@
 						/*Pas nécessaire de changer le nom tralala en autre chose vu que de toute façon si j'affiche un des deux boutons l'autre ne sera pas affiché !*/
 						echo "</form>";	
 					}
+					echo '</tr>';
 				}
-				echo '</tr>';
 			?>
 		</table>
 	</form>
