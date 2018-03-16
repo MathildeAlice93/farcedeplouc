@@ -176,7 +176,7 @@
 	{
 		$_SESSION['plouc_connecte'] = serialize($plouc_connecte);
 	}
-	if(isset($_SESSION['current_conversation'])) 
+	if(isset($_SESSION['current_conversation']) and isset($current_conversation))
 	{
 		$_SESSION['current_conversation'] = serialize($current_conversation);
 	}
