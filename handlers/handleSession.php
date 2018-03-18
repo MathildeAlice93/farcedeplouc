@@ -157,20 +157,50 @@
 		case 'poster_un_message':
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 			$current_conversation = unserialize($_SESSION['current_conversation']);
+			$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
 			$contenu_post = $_POST['nouveau_message'];
 			FarceDePloucDbUtilities::postMessage($plouc_connecte->getId(), $current_conversation->getId(), $contenu_post);
 			$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
 			include_once "pages/messenger.php";
 			break;
 		case 'switch_conversation':
+			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 			//incomplet (manque les membres)
 			$current_conversation = new Conversation;
 			$id_conversation = $_POST['tralala'];
 			$current_conversation->setId($id_conversation);
 				/* une conversation existe deja il faut l'afficher */
 			$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
+			$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
 			$_SESSION['current_conversation'] = serialize($current_conversation); 
 			include_once "pages/messenger.php";
+			break;
+		case 'recherche_pour_ajout_a_discu':
+			if(isset($_POST['recherche']) and !empty($_POST['recherche']))
+			{
+				$ma_recherche = $_POST['recherche'];
+				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+				$current_conversation = unserialize($_SESSION['current_conversation']);
+				$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
+				$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche);
+				include_once "pages/messenger.php";
+			}
+			else 
+			{
+				//erreur pas de recherche faite (plus tard)
+				include_once "pages/journal.php";
+			}
+			break;
+		case 'ajouter_pote_dans_convers':
+			if(isset($_POST['tralala']) and !empty($_POST['tralala']))
+			{
+				$personne_ajoutee_a_discu = $_POST['tralala'];
+				$current_conversation = unserialize($_SESSION['current_conversation']);
+				$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
+				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+				FarceDePloucDbUtilities::addMemberToConversation($personne_ajoutee_a_discu, $current_converation->getId());
+				include_once "pages/messenger.php";
+			}
 			break;
 		default:
 			/* ici on sera déconnecté en cas d'action erronée (que le site ne prévoit pas) pour éviter toute possibilité de risque */

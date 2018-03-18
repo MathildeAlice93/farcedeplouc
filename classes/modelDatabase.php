@@ -236,15 +236,15 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
-		private static function createConversation($public, $nom=NULL)
+		private static function createConversation($public, $titre=NULL)
 		{
 
 			$statement = self::$pdo->prepare(
-				"INSERT INTO conversation(id, date_creation, nom, public) 
-				VALUES (NULL, CURRENT_TIMESTAMP, :nom, :public);"
+				"INSERT INTO conversation(id, date_creation, titre, public) 
+				VALUES (NULL, CURRENT_TIMESTAMP, :titre, :public);"
 			);	
 			$statement->execute(array(
-				':nom' => $nom,
+				':titre' => $titre,
 				':public' => $public
 			));
 			return self::$pdo->lastInsertId();
@@ -253,7 +253,7 @@
 		/*Ici j'ai mis la fonction en private car elle n'est sensée etre appelee que par createConversationWith, pas par l'utilisateur directement */
 		{
 			$statement = self::$pdo->prepare(
-				"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_creation) 
+				"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_invitation) 
 				VALUES (:id_conversation, :id_personne, NULL, CURRENT_TIMESTAMP);"
 			);
 			$statement->execute(array(
@@ -316,14 +316,14 @@
 			try
 			{
 				$statement = self::$pdo->prepare(
-					"SELECT conversation.titre, personne.pseudo, contenu, `date`
+					"SELECT conversation.titre, pseudo, contenu, `date_envoi`
 					FROM message
 						JOIN conversation
 							ON conversation.id = message.id_conversation
 						JOIN personne 
 							ON personne.id = message.id_expediteur
 					WHERE conversation.id = :id_conversation
-					ORDER BY `date`; "
+					ORDER BY `date_envoi`; "
 				);
 				$statement->execute(array(
 					':id_conversation' => $id_conversation
@@ -341,7 +341,7 @@
 			try
 			{
 				$statement = self::$pdo->prepare(
-					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date`)
+					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date_envoi`)
 						VALUES (NULL, :id_convers, :id_personne, :contenu, CURRENT_TIMESTAMP);"
 				);
 				$statement->execute(array(
@@ -398,5 +398,25 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
+		public static function addMemberToConversation($id_personne, $id_convers)
+		/*static : veut dire qu'il s'agit d'une classe statique qui a une instance unique*/
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_invitation)
+						VALUES (:id_convers, :id_personne, NULL, CURRENT_TIMESTAMP);"
+				);
+				$statement->execute(array(
+					'id_convers' => $id_convers, 
+					'id_personne' => $id_personne
+				));
+				return 1; 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}	
 	}
 ?>
