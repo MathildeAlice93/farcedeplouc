@@ -194,11 +194,11 @@
 		case 'ajouter_pote_dans_convers':
 			if(isset($_POST['tralala']) and !empty($_POST['tralala']))
 			{
+				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 				$personne_ajoutee_a_discu = $_POST['tralala'];
 				$current_conversation = unserialize($_SESSION['current_conversation']);
 				$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
-				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-				FarceDePloucDbUtilities::addMemberToConversation($personne_ajoutee_a_discu, $current_converation->getId());
+				FarceDePloucDbUtilities::addMemberToConversation($personne_ajoutee_a_discu, $current_conversation->getId());
 				include_once "pages/messenger.php";
 			}
 			break;

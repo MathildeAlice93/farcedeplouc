@@ -83,7 +83,9 @@
         public function setMessages($messages)
         {
             $this->messages = $messages;
-        }
+		}
+		//creer fonction isMemberOfConversation (pas ajouter un membre deja present), modifier le stockage des membres,
+		//créer une conversation a partir de la page conversation
 
     }
 
