@@ -48,7 +48,7 @@
     </div>
     <div>
         <form method="POST">
-            <label for="recherche">Ma recherche: </label>
+            <label for="recherche">Ajouter un ami à la convers: </label>
             <input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
             <input type = "submit" name = "search_people_2" formaction = "router.php?handler=Session&action_du_plouc=recherche_pour_ajout_a_discu" value = "Lancer la recherche !" />
         </form>
@@ -63,7 +63,8 @@
                             echo "<td>".$personne['prenom']."</td>";
                             echo "<td>".$personne['nom']."</td>";
                             $test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id']);			
-                            if ($test_amitie){
+                            $test_conversation = FarceDePloucDbUtilities::verifyMembership($current_conversation->getId(),$personne['id']);
+                            if ($test_amitie and !$test_conversation){
                                 echo "<form method='POST'>";
                                 echo "<td> <button type='submit' name='tralala' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=ajouter_pote_dans_convers'>J'ajoute mon pote à la convers !</button> </td>";	
                                 /*Pas nécessaire de changer le nom tralala en autre chose vu que de toute façon si j'affiche un des deux boutons l'autre ne sera pas affiché !*/

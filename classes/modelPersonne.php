@@ -22,8 +22,9 @@
 
 		/*Consturcteur de la classe personne*/
 
-		public function __construct($nom="", $prenom="", $pseudo="", $date_anniversaire="", $date_inscription="", $courriel="", $mot_de_passe="")
+		public function __construct($id="", $nom="", $prenom="", $pseudo="", $date_anniversaire="", $date_inscription="", $courriel="", $mot_de_passe="")
 		{
+			$this->id = $id;
 			$this->nom = $nom; 
 			/*$this sert à dire que le programme doit aller voir son attribut nom et lui attribuer la valeur dans la variable $nom*/
 			$this->prenom = $prenom; 

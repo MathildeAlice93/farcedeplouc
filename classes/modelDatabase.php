@@ -163,10 +163,28 @@
 					LIMIT $offset, $limit;"
 				);
 				$statement->execute(array(
-					'id' => $id,
-					'statut' => "confirme"
+					':id' => $id,
+					':statut' => "confirme"
 				));
 				return $statement->fetchAll(); 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		public static function getPersonne($id)
+		{
+			try{
+				$statement = self::$pdo->prepare(
+					"SELECT id, nom, prenom, pseud
+					FROM personne
+					WHERE id = :id;"
+				);
+				$statement->execute(array(
+					':id' => $id
+				));
+				return $statement->fetchAll();
 			}
 			catch(Exception $e)
 			{
@@ -382,7 +400,7 @@
 			try
 			{
 				$statement = self::$pdo->prepare(
-					"SELECT personne.pseudo
+					"SELECT personne.nom, personne.pseudo, personne.prenom, personne.id
 					FROM joint_conversation_personne 
 						JOIN personne
 						ON joint_conversation_personne.id_personne = personne.id
@@ -391,7 +409,7 @@
 				$statement->execute(array(
 					':id_conversation' => $id_conversation
 				));
-				return $statement->fetchAll();;	
+				return $statement->fetchAll();
 			}
 			catch(Exception $e)
 			{
@@ -412,6 +430,35 @@
 					'id_personne' => $id_personne
 				));
 				return 1; 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		public static function verifyMembership($id_convers, $id_personne)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"SELECT COUNT(*)
+					FROM joint_conversation_personne 
+					WHERE joint_conversation_personne.id_conversation = :id_conversation
+					AND joint_conversation_personne.id_personne = :id_personne;"
+				);
+				$statement->execute(array(
+					':id_conversation' => $id_convers, 
+					':id_personne' => $id_personne
+				));
+				$resultat_brut = $statement->fetchAll();	
+				if($resultat_brut[0][0]>0)
+				{
+					return TRUE; 
+				}
+				else 
+				{
+					return FALSE;
+				}
 			}
 			catch(Exception $e)
 			{
