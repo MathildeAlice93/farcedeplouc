@@ -20,8 +20,12 @@
 		echo $plouc_connecte->getPrenom() . "</br>";
 		echo $plouc_connecte->getPseudo() . "</br>";
 		echo $plouc_connecte->getDate_anniversaire() . "</br>";
+
 	?>
 	</table>
+	<?php 
+		echo "Liste des potes : "; 
+	?>
 	<select name="potes_du_plouc" size="1">
 	<?php
 			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),7);
@@ -33,7 +37,7 @@
 	?>
 	</select>
 	<form method="POST">
-		<label for="recherche">Ma recherche: </label>
+		<label for="recherche">Ma recherche de personne: </label>
 		<input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
 		<input type = "submit" name = "search_people" formaction = "router.php?handler=Session&action_du_plouc=recherche" value = "Lancer la recherche !" />
 	</form>
