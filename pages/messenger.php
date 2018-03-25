@@ -79,14 +79,17 @@
     </div>
     <div>
         <?php
-            $previous_messages = $current_conversation->getMessages();
-            if(isset($previous_messages))
-            {
-                foreach($previous_messages as $message)
+            if(isset($current_conversation))
+            { 
+                $previous_messages = $current_conversation->getMessages();
+                if(isset($previous_messages))
                 {
-                    echo "<div>";
-                    echo $message['pseudo'] . ": " . $message["contenu"] . " envoyé à " . $message['date_envoi'];
-                    echo "</div>";
+                    foreach($previous_messages as $message)
+                    {
+                        echo "<div>";
+                        echo $message['pseudo'] . ": " . $message["contenu"] . " envoyé à " . $message['date_envoi'];
+                        echo "</div>";
+                    }
                 }
             }
         ?>  

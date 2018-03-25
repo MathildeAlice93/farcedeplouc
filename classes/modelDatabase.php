@@ -177,7 +177,7 @@
 		{
 			try{
 				$statement = self::$pdo->prepare(
-					"SELECT id, nom, prenom, pseud
+					"SELECT id, nom, prenom, pseudo
 					FROM personne
 					WHERE id = :id;"
 				);
@@ -280,14 +280,16 @@
 			));
 			return 1; 
 		}
-		public static function createConversationWith($public, $mon_id, $id_personne, $nom=NULL)
+		public static function createConversationWith($public, $liste_id_personnes, $nom=NULL)
 		{
 			try 
 			{
 				self::$pdo->beginTransaction();
 				$id_convers = self::createConversation($public, $nom);
-				self::addPeopleToConversation($id_convers, $id_personne);
-				self::addPeopleToConversation($id_convers, $mon_id);
+				foreach($liste_id_personnes as $id_personne)
+				{
+					self::addPeopleToConversation($id_convers, $id_personne);
+				}
 				self::$pdo->commit();
 				return $id_convers; 
 			}

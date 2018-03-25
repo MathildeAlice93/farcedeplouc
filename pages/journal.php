@@ -9,6 +9,9 @@
 	<form method='POST'>
 		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=default">Déconnexion</button>
 	</form>
+	<form method='POST'>
+		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=messenger">Messenger</button>
+	</form>
 	
 	<?php
 	//Ici on devra faire appel à une classe non statique 'Personne' 

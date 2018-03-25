@@ -117,26 +117,28 @@
 			// ces deux appels de fonctions vont te permettre de récolter les données personnels dont tu auras besoin lors de l'affichage
 			// remarque : l'affichage se passe directement dans la page 'journal'
 			$nouveau_pote_convers = $_POST['tralala'];
-			$mon_id = $plouc_connecte->getId(); 
-			echo FarceDePloucDbUtilities::createConversationWith(0, $mon_id, $nouveau_pote_convers);
+			$mon_id = $plouc_connecte->getId();
+			$liste_id_personnes=[];
+			$liste_id_personnes[]=$mon_id; 
+			$liste_id_personnes[]=$nouveau_pote_convers;
+			echo FarceDePloucDbUtilities::createConversationWith(0, $liste_id_personnes);
 			break;
 		case 'messenger':
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 			//liste toutes les conversations en cours
 			$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
-
 			//affiche les messages de la conversation sélectionnée
 			if(isset($_SESSION['current_conversation'])) 
 			{
 				$current_conversation = unserialize($_SESSION['current_conversation']);
 			}
-			else
+			else if(NULL !== $_POST['tralala'])
 			{
 				$current_conversation = new Conversation;
 				$membres = [];
 				$membres[] = $plouc_connecte;
 				$mon_pote = FarceDePloucDbUtilities::getPersonne($_POST['tralala']);
-				$plouc_avec_qui_parler = new Personne($id=$_POST['tralala'], $nom=$mon_pote[0]['nom'], $prenom=$mon_pote[0]['prenom'], $pseudo=$mon_pote[0]['pseudo']);
+				$plouc_avec_qui_parler = new Personne($id=$mon_pote[0]['id'], $nom=$mon_pote[0]['nom'], $prenom=$mon_pote[0]['prenom'], $pseudo=$mon_pote[0]['pseudo']);
 				$membres[] = $plouc_avec_qui_parler;
 				$current_conversation->setMembres($membres);
 				$fetched_id_conversation = FarceDePloucDbUtilities::existeConversationPrive($membres[0]->getId(), $membres[1]->getId());
@@ -149,7 +151,10 @@
 				else
 				{
 					/* on cree une nouvelle conversation (aucun message deja ecrit) */
-					$current_conversation->setId(FarceDePloucDbUtilities::createConversationWith(0, $membres[0], $membres[1]));
+					$liste_id_personnes=[];
+					$liste_id_personnes[]=$membres[0]->getId();
+					$liste_id_personnes[]=$membres[1]->getId();
+					$current_conversation->setId(FarceDePloucDbUtilities::createConversationWith(0, $liste_id_personnes));
 				}
 				$_SESSION['current_conversation'] = serialize($current_conversation); 
 			}
@@ -174,10 +179,13 @@
 				/* une conversation existe deja il faut l'afficher */
 			$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
 			$membres = FarceDePloucDbUtilities::getMembresConversation($current_conversation->getId());
+			$liste_membres=[];
 			foreach($membres as $membre)
 			{
-				$membre_personne = new Personne($id=$membre[0]['id'], $nom=$membre[0]['nom'], $prenom=$membre[0]['prenom'], $pseudo=$membre[0]['pseudo']);
+				$membre_personne = new Personne($id=$membre['id'], $nom=$membre['nom'], $prenom=$membre['prenom'], $pseudo=$membre['pseudo']);
+				$liste_membres[]=$membre_personne;
 			}
+			$current_conversation->setMembres($liste_membres);
 			$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
 			$_SESSION['current_conversation'] = serialize($current_conversation); 
 			include_once "pages/messenger.php";
