@@ -88,7 +88,7 @@
 			{
 				$ma_recherche = $_POST['recherche'];
 				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-				$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche);
+				$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche, $plouc_connecte->getId());
 				include_once "pages/recherche.php";
 			}
 			else 
@@ -197,7 +197,7 @@
 				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 				$current_conversation = unserialize($_SESSION['current_conversation']);
 				$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
-				$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche);
+				$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche, $plouc_connecte->getId());
 				include_once "pages/messenger.php";
 			}
 			else 

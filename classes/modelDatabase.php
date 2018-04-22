@@ -235,17 +235,18 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
-		public static function searchPeople($wanted_plouc)
+		public static function searchPeople($wanted_plouc, $plouc_connecte_id)
 		{
 			try
 			{
 				$statement = self::$pdo->prepare(
 					"SELECT *
 					FROM personne
-					WHERE personne.nom = :wanted_plouc OR personne.pseudo = :wanted_plouc OR personne.prenom = :wanted_plouc;"
+					WHERE (personne.nom = :wanted_plouc OR personne.pseudo = :wanted_plouc OR personne.prenom = :wanted_plouc) AND personne.id <> :ma_variable_id;"
 				);	
 				$statement->execute(array(
-					'wanted_plouc' => $wanted_plouc
+					'wanted_plouc' => $wanted_plouc,
+					'ma_variable_id' => $plouc_connecte_id
 				));
 				return $statement->fetchAll();
 			}
