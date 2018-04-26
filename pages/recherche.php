@@ -29,7 +29,7 @@
 					echo "<td>".$personne['pseudo']."</td>";
 					echo "<td>".$personne['prenom']."</td>";
 					echo "<td>".$personne['nom']."</td>";
-					$test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id']);			
+					$test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id'])=='confirme';			
 					if (!$test_amitie){
 						echo "<form method='POST'>";
 						echo "<td> <button type='submit' name='tralala' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=ajouter_un_pote'>Ajouter un ami!</button> </td>";	

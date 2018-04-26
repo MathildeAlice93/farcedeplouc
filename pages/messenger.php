@@ -62,7 +62,7 @@
                             echo "<td>".$personne['pseudo']."</td>";
                             echo "<td>".$personne['prenom']."</td>";
                             echo "<td>".$personne['nom']."</td>";
-                            $test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id']);			
+                            $test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id'])=="confirme";			
                             $test_conversation = FarceDePloucDbUtilities::verifyMembership($current_conversation->getId(),$personne['id']);
                             if ($test_amitie and !$test_conversation){
                                 echo "<form method='POST'>";
