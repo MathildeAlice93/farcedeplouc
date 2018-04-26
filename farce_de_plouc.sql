@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  Dim 04 mars 2018 à 14:22
+-- Généré le :  jeu. 26 avr. 2018 à 20:58
 -- Version du serveur :  5.7.19
 -- Version de PHP :  5.6.31
 
@@ -46,28 +46,28 @@ DROP TABLE IF EXISTS `conversation`;
 CREATE TABLE IF NOT EXISTS `conversation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date_creation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `nom` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `titre` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `public` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Déchargement des données de la table `conversation`
 --
 
-INSERT INTO `conversation` (`id`, `date_creation`, `nom`, `public`) VALUES
-(1, '2018-03-04 13:28:01', NULL, 1),
-(2, '2018-03-04 13:28:24', NULL, 1),
-(3, '2018-03-04 13:30:24', '', 1),
-(4, '2018-03-04 13:30:35', '', 1),
-(5, '2018-03-04 13:31:15', NULL, 1),
-(6, '2018-03-04 13:37:10', NULL, 1),
-(7, '2018-03-04 13:47:53', NULL, 1),
-(8, '2018-03-04 14:11:06', NULL, 0),
-(9, '2018-03-04 14:11:36', NULL, 0),
-(10, '2018-03-04 14:15:02', NULL, 0),
-(11, '2018-03-04 14:18:02', NULL, 0),
-(12, '2018-03-04 14:18:23', NULL, 0);
+INSERT INTO `conversation` (`id`, `date_creation`, `titre`, `public`) VALUES
+(20, '2018-03-18 13:18:55', NULL, 0),
+(21, '2018-03-18 13:23:26', NULL, 0),
+(23, '2018-03-18 15:35:53', NULL, 0),
+(24, '2018-03-22 20:41:21', NULL, 0),
+(25, '2018-03-25 13:11:54', NULL, 0),
+(26, '2018-03-25 13:18:38', NULL, 0),
+(27, '2018-03-25 23:07:18', NULL, 0),
+(28, '2018-04-02 07:58:15', NULL, 0),
+(29, '2018-04-26 20:18:18', NULL, 0),
+(30, '2018-04-26 20:22:31', NULL, 0),
+(31, '2018-04-26 20:25:32', NULL, 0),
+(32, '2018-04-26 20:51:30', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `joint_conversation_personne` (
   `id_conversation` int(11) NOT NULL,
   `id_personne` int(11) NOT NULL,
   `date_lecture` timestamp NULL DEFAULT NULL,
-  `date_creation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_invitation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_conversation`,`id_personne`),
   KEY `id_conversation` (`id_conversation`),
   KEY `id_personne` (`id_personne`)
@@ -90,15 +90,34 @@ CREATE TABLE IF NOT EXISTS `joint_conversation_personne` (
 -- Déchargement des données de la table `joint_conversation_personne`
 --
 
-INSERT INTO `joint_conversation_personne` (`id_conversation`, `id_personne`, `date_lecture`, `date_creation`) VALUES
-(8, 12, NULL, '2018-03-04 14:16:59'),
-(8, 24, NULL, '2018-03-04 14:16:59'),
-(9, 12, NULL, '2018-03-04 14:16:59'),
-(9, 25, NULL, '2018-03-04 14:16:59'),
-(10, 5, NULL, '2018-03-04 14:16:59'),
-(10, 25, NULL, '2018-03-04 14:16:59'),
-(12, 5, NULL, '2018-03-04 14:18:23'),
-(12, 24, NULL, '2018-03-04 14:18:23');
+INSERT INTO `joint_conversation_personne` (`id_conversation`, `id_personne`, `date_lecture`, `date_invitation`) VALUES
+(20, 30, NULL, '2018-03-18 13:18:55'),
+(20, 32, NULL, '2018-03-18 13:18:55'),
+(20, 33, NULL, '2018-03-25 12:56:05'),
+(20, 34, NULL, '2018-03-22 20:41:34'),
+(21, 30, NULL, '2018-03-18 13:23:26'),
+(21, 33, NULL, '2018-03-18 13:23:26'),
+(23, 32, NULL, '2018-03-18 15:35:53'),
+(23, 34, NULL, '2018-03-18 15:35:53'),
+(24, 30, NULL, '2018-03-22 20:41:21'),
+(24, 34, NULL, '2018-03-22 20:41:21'),
+(25, 36, NULL, '2018-03-25 13:15:32'),
+(26, 30, NULL, '2018-03-25 13:18:38'),
+(26, 37, NULL, '2018-03-25 13:18:38'),
+(27, 30, NULL, '2018-03-25 23:07:18'),
+(27, 38, NULL, '2018-03-25 23:07:18'),
+(28, 34, NULL, '2018-04-02 07:58:15'),
+(28, 39, NULL, '2018-04-02 07:58:15'),
+(29, 30, NULL, '2018-04-26 20:18:18'),
+(29, 32, NULL, '2018-04-26 20:18:18'),
+(30, 33, NULL, '2018-04-26 20:22:31'),
+(30, 38, NULL, '2018-04-26 20:22:31'),
+(31, 32, NULL, '2018-04-26 20:25:32'),
+(31, 38, NULL, '2018-04-26 20:25:32'),
+(32, 30, NULL, '2018-04-26 20:51:47'),
+(32, 32, NULL, '2018-04-26 20:51:30'),
+(32, 33, NULL, '2018-04-26 20:51:30'),
+(32, 34, NULL, '2018-04-26 20:52:04');
 
 -- --------------------------------------------------------
 
@@ -122,22 +141,17 @@ CREATE TABLE IF NOT EXISTS `joint_personne` (
 --
 
 INSERT INTO `joint_personne` (`id_demandeur`, `id_receveur`, `statut`, `date_demande`, `date_traitement`) VALUES
-(5, 6, 'confirme', '2017-12-23 17:57:13', '2017-12-23 17:57:13'),
-(5, 12, 'en_attente', '2018-02-18 12:42:39', NULL),
-(5, 17, 'en_attente', '2018-02-18 12:46:35', NULL),
-(5, 18, 'confirme', '2018-02-18 12:47:56', NULL),
-(5, 24, 'confirme', '2018-03-04 14:14:51', NULL),
-(5, 25, 'confirme', '2018-03-04 14:14:02', NULL),
-(6, 12, 'confirme', '2017-12-23 17:57:13', '2017-12-23 17:57:13'),
-(12, 14, 'confirme', '2018-02-25 20:58:10', NULL),
-(12, 15, 'confirme', '2018-02-25 21:06:27', NULL),
-(12, 16, 'confirme', '2018-02-25 21:19:04', NULL),
-(12, 18, 'confirme', '2018-02-25 21:47:53', NULL),
-(12, 24, 'confirme', '2018-02-25 21:42:49', NULL),
-(12, 25, 'confirme', '2018-02-25 21:41:55', NULL),
-(12, 26, 'confirme', '2018-02-25 21:50:34', NULL),
-(12, 27, 'confirme', '2018-02-25 21:51:59', NULL),
-(12, 28, 'confirme', '2018-02-25 21:52:27', NULL);
+(30, 32, 'confirme', '2018-03-18 13:18:48', NULL),
+(30, 36, 'confirme', '2018-03-25 13:11:48', NULL),
+(30, 37, 'confirme', '2018-03-25 13:18:33', NULL),
+(32, 33, 'confirme', '2018-04-26 20:51:25', NULL),
+(32, 38, 'confirme', '2018-04-26 20:25:25', NULL),
+(33, 30, 'confirme', '2018-03-18 13:23:19', NULL),
+(33, 38, 'confirme', '2018-04-26 20:21:08', NULL),
+(34, 30, 'confirme', '2018-03-18 15:35:36', NULL),
+(34, 32, 'confirme', '2018-03-18 15:35:45', NULL),
+(34, 39, 'confirme', '2018-04-02 07:58:03', NULL),
+(38, 30, 'confirme', '2018-03-25 23:07:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -149,13 +163,45 @@ DROP TABLE IF EXISTS `message`;
 CREATE TABLE IF NOT EXISTS `message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_conversation` int(11) NOT NULL,
-  `expediteur` int(11) NOT NULL,
+  `id_expediteur` int(11) NOT NULL,
   `contenu` text NOT NULL,
-  `date` datetime NOT NULL,
+  `date_envoi` timestamp NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_id_conversation` (`id_conversation`),
-  KEY `FK_id_personne` (`expediteur`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `FK_id_personne` (`id_expediteur`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `message`
+--
+
+INSERT INTO `message` (`id`, `id_conversation`, `id_expediteur`, `contenu`, `date_envoi`) VALUES
+(20, 20, 30, 'bonjour', '2018-03-18 13:18:59'),
+(21, 20, 30, 'bonjour', '2018-03-18 13:22:32'),
+(22, 21, 33, 'salut je suis i', '2018-03-18 13:23:42'),
+(23, 21, 33, 'yolo', '2018-03-18 13:23:53'),
+(24, 21, 30, 'k', '2018-03-18 13:43:41'),
+(25, 21, 30, 's', '2018-03-18 13:43:52'),
+(26, 21, 30, 's', '2018-03-18 13:47:42'),
+(27, 21, 30, 's', '2018-03-18 13:48:32'),
+(28, 21, 30, 'fdqfd\r\n', '2018-03-18 15:12:30'),
+(29, 20, 30, 'j\'ai quelque chose Ã  te dire', '2018-03-18 15:34:15'),
+(30, 21, 30, 'ceci est ma conversation avec i ', '2018-03-18 15:34:32'),
+(31, 23, 34, 'Bonjour j!\r\n', '2018-03-18 15:35:59'),
+(32, 23, 32, 'Bonjour a!', '2018-03-18 15:36:28'),
+(33, 20, 30, 'tagada', '2018-03-22 20:41:41'),
+(34, 20, 34, 'bonjour ', '2018-03-22 20:42:01'),
+(35, 25, 30, 'yolo', '2018-03-25 13:15:14'),
+(36, 26, 30, 'bonjour d', '2018-03-25 13:18:43'),
+(37, 21, 30, 'je suis triste aujd\r\n', '2018-03-25 22:59:04'),
+(38, 24, 30, 'La conversation entre a et k ', '2018-03-25 22:59:20'),
+(39, 27, 38, 'bonjour k, c\'est manon ! ', '2018-03-25 23:07:25'),
+(40, 27, 30, 'salut manouchka ', '2018-03-25 23:07:57'),
+(41, 28, 34, 'Salut!\r\n', '2018-04-02 07:58:22'),
+(42, 28, 34, 'est-ce que Ã§a va ? ', '2018-04-02 07:58:33'),
+(43, 20, 30, 'tralala', '2018-04-26 20:24:25'),
+(44, 24, 30, 'salagadou', '2018-04-26 20:24:51'),
+(45, 32, 32, 'qsmdl\'fkj', '2018-04-26 20:51:33');
 
 -- --------------------------------------------------------
 
@@ -175,29 +221,22 @@ CREATE TABLE IF NOT EXISTS `personne` (
   `mot_de_passe` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `courriel` (`courriel`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `personne`
 --
 
 INSERT INTO `personne` (`id`, `nom`, `prenom`, `pseudo`, `date_anniversaire`, `date_inscription`, `courriel`, `mot_de_passe`) VALUES
-(5, 'g', 'g', 'g', '2017-07-09', '2017-12-10 17:37:34', 'g', 'g'),
-(6, 'i', 'i', 'i', '2017-07-09', '2017-12-10 17:38:56', 'i', 'i'),
-(12, 'k', 'k', 'k', '2017-07-09', '2017-12-23 16:52:12', 'k', 'k'),
-(14, 'a', 'a', 'a', '2017-09-01', '2018-01-21 21:22:23', 'a', 'a'),
-(15, 'b', 'b', 'b', '2017-09-01', '2018-01-21 21:23:33', 'b', 'b'),
-(16, 'c', 'c', 'c', '2017-09-01', '2018-01-21 21:23:50', 'c', 'c'),
-(17, 'd', 'd', 'd', '2017-09-01', '2018-01-21 21:23:59', 'd', 'd'),
-(18, 'e', 'e', 'e', '2017-09-01', '2018-01-21 21:24:16', 'e', 'e'),
-(19, 'f', 'f', 'f', '2017-09-01', '2018-01-21 21:24:25', 'f', 'f'),
-(22, '', '', '', NULL, '2018-01-21 22:28:47', '', ''),
-(23, 'z', 'z', 'z', '2018-01-01', '2018-02-25 21:23:56', 'z', 'z'),
-(24, 'test', 'test', 'j', '2018-01-01', '2018-02-25 21:39:42', 'test', 'test'),
-(25, 'j', 'j', 'j', '2018-01-01', '2018-02-25 21:41:30', 'j', 'j'),
-(26, 'test2', 'test2', 'e', '2018-01-01', '2018-02-25 21:44:52', 'test2', 'test2'),
-(27, 'y', 'y', 'y', '2018-01-01', '2018-02-25 21:51:23', 'y', 'y'),
-(28, 'test', 'test', 'y', '2018-01-01', '2018-02-25 21:51:39', 'test3', 'test3');
+(30, 'k', 'k', 'k', '2018-01-01', '2018-03-18 13:17:43', 'k', 'k'),
+(32, 'j', 'j', 'j', '2018-01-01', '2018-03-18 13:18:04', 'j', 'j'),
+(33, 'i', 'i', 'i', '2018-01-01', '2018-03-18 13:23:10', 'i', 'i'),
+(34, 'a', 'a', 'a', '2017-07-09', '2018-03-18 15:35:16', 'a', 'a'),
+(35, 'b', 'b', 'b', '2018-01-01', '2018-03-22 21:12:05', 'b', 'b'),
+(36, 'c', 'c', 'c', '2018-01-01', '2018-03-25 13:11:40', 'c', 'c'),
+(37, 'd', 'd', 'd', '2018-01-01', '2018-03-25 13:18:25', 'd', 'd'),
+(38, 'manon', 'de clercq ', 'Manouchka', '2017-07-09', '2018-03-25 23:06:22', 'cocottemanette@hotmail.fr', 'bambou'),
+(39, 'Michnowska', 'Aneta', 'Anemich', '2017-07-09', '2018-04-02 07:57:27', 'aneta@michnowka.com', 'chouchou');
 
 --
 -- Contraintes pour les tables déchargées
@@ -222,7 +261,7 @@ ALTER TABLE `joint_personne`
 --
 ALTER TABLE `message`
   ADD CONSTRAINT `FK_id_conversation` FOREIGN KEY (`id_conversation`) REFERENCES `conversation` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_id_expediteur` FOREIGN KEY (`expediteur`) REFERENCES `personne` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_id_expediteur` FOREIGN KEY (`id_expediteur`) REFERENCES `personne` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
