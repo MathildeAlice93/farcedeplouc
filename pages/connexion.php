@@ -26,6 +26,12 @@
             height: 50px;
         }
     </style>
+    <script>
+        function erreurMail(){
+            var elemCBis = document.getElementById('courriel_bis');
+            elemCBis.style.backgroundColor = "red";
+        }
+    </script>
 </head>
 
 <body>
@@ -85,7 +91,7 @@
                         </div>
                         <input class="form-control" name='pseudo' id='pseudo' placeholder="Ton pseudo" type="pseudo" />
                         <input class="form-control" name='courriel' id='courriel' placeholder="Ton adresse email" type="email" />
-                        <input class="form-control" name='undefined' id='undefined' placeholder="Retape-là une seconde fois !" type="email" />
+                        <input class="form-control" name='courriel_bis' id='courriel_bis' placeholder="Retape-là une seconde fois !" type="email" />
                         <!--a adapter dans les fonctionnalités-->
                         <input class="form-control" name='mot_de_passe' id='mot_de_passe' placeholder="Ton mot de passe TOP secret" type="password"
                         />
@@ -93,18 +99,33 @@
                         <!--a adapter dans les fonctionnalités-->
                         <div class="row">
                             <div class="col-xs-4 col-md-4">
-                                <select class="form-control">
-                                    <option value="Day">Jour</option>
+                                <select name="jour" class="form-control">
+                                    <option value="" disabled selected>Jour</option>
+                                        <?php 
+                                            for ($Day = 1; $Day <= 31; $Day++) {
+                                                echo "<option value='".$Day."' placeholder='Day'>".$Day."</option>";
+                                            }
+                                        ?>
                                 </select>
                             </div>
                             <div class="col-xs-4 col-md-4">
-                                <select class="form-control">
-                                    <option value="Month">Mois</option>
+                                <select name="mois" class="form-control">
+                                    <option value="" disabled selected>Mois</option>
+                                        <?php 
+                                            for ($Month = 1; $Month <= 12; $Month++) {
+                                                echo "<option value='".$Month."'>".$Month."</option>";
+                                            }
+                                        ?>
                                 </select>
                             </div>
                             <div class="col-xs-4 col-md-4">
-                                <select class="form-control">
-                                    <option value="Year">Année</option>
+                                <select name="annee" class="form-control">
+                                    <option value="" disabled selected>Année</option>
+                                        <?php 
+                                            for ($Year = 1900; $Year <= date("Y"); $Year++) {
+                                                echo "<option value='".$Year."'>".$Year."</option>";
+                                            }
+                                        ?>
                                 </select>
                             </div>
                         </div>

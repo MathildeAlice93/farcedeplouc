@@ -19,13 +19,19 @@
 		{
 			$personne->setPseudo($_POST['pseudo']);
 		}
-		if(isset($_POST['date_anniversaire']) and !empty($_POST['date_anniversaire']))
+		if(isset($_POST['jour']) and !empty($_POST['jour']) and isset($_POST['mois']) and !empty($_POST['mois']) and isset($_POST['annee']) and !empty($_POST['annee']))
 		{
-			$personne->setDate_anniversaire($_POST['date_anniversaire']);
+			$date_annif = $_POST['annee']."-".$_POST['mois']."-".$_POST['jour'];
+			$personne->setDate_anniversaire($date_annif);
 		}
-		if(isset($_POST['courriel']) and !empty($_POST['courriel']))
+		if(isset($_POST['courriel']) and !empty($_POST['courriel']) and isset($_POST['courriel_bis']) and !empty($_POST['courriel_bis']))
 		{
-			$personne->setCourriel($_POST['courriel']); 
+			if($_POST['courriel']==$_POST['courriel_bis']){
+				$personne->setCourriel($_POST['courriel']); 
+			}
+			else{
+				echo "<script> erreurMail(); </script>";
+			}
 		}
 		if(isset($_POST['mot_de_passe']) and !empty($_POST['mot_de_passe']))
 		{
@@ -40,6 +46,6 @@
 		
 		FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
 
-		include_once "pages/connexion.php"
+		include_once "pages/connexion.php";
 	?>
 
