@@ -27,8 +27,8 @@
         }
     </style>
     <script>
-        function erreurMail(){
-            var elemCBis = document.getElementById('courriel_bis');
+        function erreur($element_faux){
+            var elemCBis = document.getElementById($element_faux);
             elemCBis.style.backgroundColor = "red";
         }
     </script>
@@ -83,10 +83,10 @@
                     <form method="POST" action="router.php" class="form" role="form">
                         <div class="row">
                             <div class="col-xs-6 col-md-6">
-                                <input class="form-control" name='prenom' id='prenom' placeholder="Ton prénom" type="text" required autofocus />
+                                <input class="form-control" name='prenom' id='prenom' placeholder="Ton prénom" type="text"  autofocus />
                             </div>
                             <div class="col-xs-6 col-md-6">
-                                <input class="form-control" name='nom' id='nom' placeholder="Ton blaze" type="text" required />
+                                <input class="form-control" name='nom' id='nom' placeholder="Ton blaze" type="text"  />
                             </div>
                         </div>
                         <input class="form-control" name='pseudo' id='pseudo' placeholder="Ton pseudo" type="pseudo" />
