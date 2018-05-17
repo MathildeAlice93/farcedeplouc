@@ -4,6 +4,8 @@
 
 		$personne = new Personne;
 
+		$valid = true;
+
 
 		/*Gestion des vues*/
 
@@ -30,7 +32,9 @@
 				$personne->setCourriel($_POST['courriel']); 
 			}
 			else{
+				include_once "pages/connexion.php";
 				echo "<script> erreurMail(); </script>";
+				$valid = false;
 			}
 		}
 		if(isset($_POST['mot_de_passe']) and !empty($_POST['mot_de_passe']))
@@ -39,13 +43,14 @@
 		}
 
 		/*Connexion à la base de données*/
-
-		FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-		/*Dans la classe modelDatabase tu appelles la fonction connectPdodb*/
-		/*Le mode d'emploi de connectPdodb ets dans modelDatabase mnt tu l'appelle en lui donnant les arguments que tu as défini dans router.php pour te connecter à la bdd.*/
-		
-		FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
-
-		include_once "pages/connexion.php";
+		if($valid)
+		{
+			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+			/*Dans la classe modelDatabase tu appelles la fonction connectPdodb*/
+			/*Le mode d'emploi de connectPdodb ets dans modelDatabase mnt tu l'appelle en lui donnant les arguments que tu as défini dans router.php pour te connecter à la bdd.*/
+			
+			FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
+	
+			include_once "pages/connexion.php";
+		}
 	?>
-
