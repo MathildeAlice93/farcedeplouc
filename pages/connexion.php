@@ -28,8 +28,16 @@
     </style>
     <script>
         function erreur($element_faux){
-            var elemCBis = document.getElementById($element_faux);
-            elemCBis.style.backgroundColor = "red";
+            var elem = document.getElementById($element_faux);
+            elem.style.backgroundColor = "red";
+        }
+        function set_value($id, $valeur){
+            var elem = document.getElementById($id);
+            elem.setAttribute("value",$valeur);
+        }
+        function set_option($id){
+            var elem = document.getElementById($id);
+            elem.setAttribute("selected","selected");
         }
     </script>
 </head>
@@ -99,31 +107,31 @@
                         <!--a adapter dans les fonctionnalités-->
                         <div class="row">
                             <div class="col-xs-4 col-md-4">
-                                <select name="jour" class="form-control">
+                                <select id='jour' name="jour" class="form-control">
                                     <option value="" disabled selected>Jour</option>
                                         <?php 
                                             for ($Day = 1; $Day <= 31; $Day++) {
-                                                echo "<option value='".$Day."' placeholder='Day'>".$Day."</option>";
+                                                echo "<option id='jour_".$Day."' value='".$Day."' placeholder='Day'>".$Day."</option>";
                                             }
                                         ?>
                                 </select>
                             </div>
                             <div class="col-xs-4 col-md-4">
-                                <select name="mois" class="form-control">
+                                <select id='mois' name="mois" class="form-control">
                                     <option value="" disabled selected>Mois</option>
                                         <?php 
                                             for ($Month = 1; $Month <= 12; $Month++) {
-                                                echo "<option value='".$Month."'>".$Month."</option>";
+                                                echo "<option id='mois_".$Month."' value='".$Month."'>".$Month."</option>";
                                             }
                                         ?>
                                 </select>
                             </div>
                             <div class="col-xs-4 col-md-4">
-                                <select name="annee" class="form-control">
+                                <select id='an' name="annee" class="form-control">
                                     <option value="" disabled selected>Année</option>
                                         <?php 
-                                            for ($Year = 1900; $Year <= date("Y"); $Year++) {
-                                                echo "<option value='".$Year."'>".$Year."</option>";
+                                            for ($Year = date("Y"); $Year >= 1900; $Year--) {
+                                                echo "<option id='annee_".$Year."' value='".$Year."'>".$Year."</option>";
                                             }
                                         ?>
                                 </select>

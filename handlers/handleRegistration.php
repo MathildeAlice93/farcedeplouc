@@ -5,7 +5,7 @@
 		$personne = new Personne;
 
 		$erreurs = []; 
-
+		
 
 		/*Gestion des vues*/
 
@@ -31,12 +31,24 @@
 			$erreurs['3']='pseudo';
 		}
 		if(isset($_POST['jour']) and !empty($_POST['jour']) and isset($_POST['mois']) and !empty($_POST['mois']) and isset($_POST['annee']) and !empty($_POST['annee']))
+		#le php utilise comme référence le name d'une balise html alors que js utilise l'id
 		{
 			$date_annif = $_POST['annee']."-".$_POST['mois']."-".$_POST['jour'];
 			$personne->setDate_anniversaire($date_annif);
 		}
 		else{
-			$erreurs['4']='jour';
+			if(!(isset($_POST['jour']) or !empty($_POST['jour'])))
+			{
+				$erreurs['4']='jour';
+			}
+			if(!(isset($_POST['mois']) or !empty($_POST['mois'])))
+			{
+				$erreurs['8']='mois';
+			}
+			if(!(isset($_POST['an']) or !empty($_POST['an'])))
+			{
+				$erreurs['9']='an'; 
+			}
 			#il y a un problème ici
 		}
 		if(isset($_POST['courriel']) and !empty($_POST['courriel']) and isset($_POST['courriel_bis']) and !empty($_POST['courriel_bis']))
@@ -71,7 +83,57 @@
 	
 			include_once "pages/connexion.php";
 		}else{
+
 			include_once "pages/connexion.php";
+
+			if(isset($_POST['nom']) and !empty($_POST['nom']))
+			{
+				$waarde = $_POST['nom'];
+				$id = 'nom';
+				echo "<script> set_value('".$id."','".$waarde."'); </script>";
+			}
+			if(isset($_POST['prenom']) and !empty($_POST['prenom']))
+			{
+				$waarde = $_POST['prenom'];
+				$id = 'prenom';
+				echo "<script> set_value('".$id."','".$waarde."'); </script>";
+			}
+			if(isset($_POST['pseudo']) and !empty($_POST['pseudo']))
+			{
+				$waarde = $_POST['pseudo'];
+				$id = 'pseudo';
+				echo "<script> set_value('".$id."','".$waarde."'); </script>";
+			}
+			if(isset($_POST['jour']) and !empty($_POST['jour']))
+			{
+				$waarde = $_POST['jour'];
+				$id = 'jour_'.$waarde;
+				echo "<script> set_option('".$id."'); </script>";
+			}
+			if(isset($_POST['mois']) and !empty($_POST['mois']))
+			{
+				$waarde = $_POST['mois'];
+				$id = 'mois_'.$waarde;
+				echo "<script> set_option('".$id."'); </script>";
+			}
+			if(isset($_POST['annee']) and !empty($_POST['annee']))
+			{
+				$waarde = $_POST['annee'];
+				$id = 'annee_'.$waarde;
+				echo "<script> set_option('".$id."'); </script>";
+			}
+			if(isset($_POST['courriel']) and !empty($_POST['courriel']))
+			{
+				$waarde = $_POST['courriel'];
+				$id = 'courriel';
+				echo "<script> set_value('".$id."','".$waarde."'); </script>";
+			}
+			if(isset($_POST['courriel_bis']) and !empty($_POST['courriel_bis']))
+			{
+				$waarde = $_POST['courriel_bis'];
+				$id = 'courriel_bis';
+				echo "<script> set_value('".$id."','".$waarde."'); </script>";
+			}
 			foreach($erreurs as $erreur){
 				echo "<script> erreur('".$erreur."'); </script>";
 				/* $erreur est une variable php qui contient un string (en php)
