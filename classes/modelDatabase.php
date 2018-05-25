@@ -353,7 +353,7 @@
 					':id_connecte' => $id_max, 
 					'id_demande' => $id_min
 				));
-				return $statement->fetchAll();;	
+				return $statement->fetchAll();
 			}
 			catch(Exception $e)
 			{
@@ -377,7 +377,7 @@
 				$statement->execute(array(
 					':id_conversation' => $id_conversation
 				));
-				return $statement->fetchAll();;	
+				return $statement->fetchAll();
 			}
 			catch(Exception $e)
 			{
@@ -419,7 +419,7 @@
 				$statement->execute(array(
 					':id_connecte' => $id_connecte
 				));
-				return $statement->fetchAll();;	
+				return $statement->fetchAll();
 			}
 			catch(Exception $e)
 			{
