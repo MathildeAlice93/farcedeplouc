@@ -59,9 +59,7 @@
 						$plouc_connecte->setDate_inscription($row['date_inscription']);
 						$plouc_connecte->setCourriel($row['courriel']); 
 						$plouc_connecte->setMot_de_passe($row['mot_de_passe']);
-					}
-
-					
+					}					
 
 					include_once "pages/journal.php";
 				}
@@ -107,7 +105,7 @@
 				$mon_nouveau_pote = $_POST['tralala'];
 				FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 				$id_demandeur=$plouc_connecte->getId();
-				FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "confirme");
+				FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "en_attente");
 				include_once "pages/journal.php";
 			}
 			else 
@@ -116,6 +114,33 @@
 				include_once "pages/journal.php";
 			}
 			break;
+		case 'accepter_refuser':
+		if(isset($_SESSION['compteur']) and !empty($_SESSION['compteur']))
+		{
+			for($i=0; $_SESSION['compteur']>$i; $i++)
+			{
+				$testing = 'accepter_pote_'.$i;
+				if(isset($_POST[$testing]))
+				{
+					$recupere = $_SESSION[$i];
+					FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+					$id_receveur=$plouc_connecte->getId();
+					FarceDePloucDbUtilities::updateJoint_personne($id_receveur, $recupere, 'confirme');
+					include_once "pages/journal.php";
+					break;
+				}
+			}			
+			//cas ou on n'a rien trouve (aucun bouton cliqué = bug)
+			//traiter le cas du bouton refuser
+			//probleme : debugger fonctionne pas
+			//erreur affichee lors du chargement de la page (potentiellement $_SESSION qui refuse d'etre modifie)=> convertir $key en string avant de le mettre dans $_session
+		}
+		else 
+		{
+			//erreur pas de recherche faite (plus tard)
+			include_once "pages/journal.php";
+		}
+		break;
 		case 'create_conversation': 
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 			// ces deux appels de fonctions vont te permettre de récolter les données personnels dont tu auras besoin lors de l'affichage

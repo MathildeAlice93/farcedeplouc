@@ -111,7 +111,28 @@
 				$statement->execute(array(
 					'id_demandeur' => $id_demandeur, 
 					'id_receveur' => $id_receveur, 
-					'statut' => "confirme"
+					'statut' => $statut
+				));
+				return 1; 
+			}
+			catch(Exception $e)
+			{
+				die('Erreur : '.$e->getMessage());
+			}
+		}
+		public static function updateJoint_personne($id_receveur, $mon_nouveau_pote, $statut)
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"UPDATE joint_personne
+					SET statut = :statut
+					WHERE (id_receveur = :id_receveur AND id_demandeur = :mon_nouveau_pote);"
+				);
+				$statement->execute(array(
+					'id_receveur' => $id_receveur, 
+					'mon_nouveau_pote' => $mon_nouveau_pote, 
+					'statut' => $statut
 				));
 				return 1; 
 			}
@@ -153,7 +174,7 @@
 				die('Erreur : '.$e->getMessage());
 			}
 		}
-		public static function getPotes($id, $limit, $offset=0)
+		public static function getPotes($id, $statut, $limit, $offset=0)
 		{
 			try 
 			{
@@ -170,10 +191,11 @@
 				);
 				$statement->execute(array(
 					':id' => $id,
-					':statut' => "confirme"
+					':statut' => $statut
 				));
 				return $statement->fetchAll(); 
 			}
+			
 			catch(Exception $e)
 			{
 				die('Erreur : '.$e->getMessage());

@@ -31,7 +31,7 @@
 	?>
 	<select name="potes_du_plouc" size="1">
 	<?php
-			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),7);
+			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),'confirme',7);
 			//Ici on utilise "::" car on fait un appel de classe statique cad qu'on a une seule et unique instance
 			foreach($affichage_potes as $pote){
 				$truc=$pote['pseudo'];
@@ -45,5 +45,23 @@
 		<input type = "submit" name = "search_people" formaction = "router.php?handler=Session&action_du_plouc=recherche" value = "Lancer la recherche !" />
 	</form>
 
+	<?php 
+		echo "Amis en attente : "; 
+			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),'en_attente',7);
+			//Ici on utilise "::" car on fait un appel de classe statique cad qu'on a une seule et unique instance
+			$key=0;
+			foreach($affichage_potes as $pote){
+				echo "<form method='POST' action ='router.php?handler=Session&action_du_plouc=accepter_refuser'>";
+				$truc=$pote['pseudo'];
+				$id_valeur=$pote['id'];
+				echo "<li>$truc <button type='submit' name='accepter_pote_".$key."'>Accepter</button><button type='submit' name='refuser_pote_".$key."'>Refuser</button></li>";
+				//probleme de cette solution session contient les id a partir des numero de ligne, on ne sait pas quelle ligne a été choisie par l'utilisateur
+				$keyString = ''.$key;
+				$_SESSION[$keyString]=$id_valeur;
+				echo "</form>"; 
+				$key++;
+			}
+			$_SESSION['compteur']=$key;
+	?>
 </body>
 </html> 
