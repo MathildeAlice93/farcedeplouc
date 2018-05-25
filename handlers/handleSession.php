@@ -122,7 +122,8 @@
 				$testing = 'accepter_pote_'.$i;
 				if(isset($_POST[$testing]))
 				{
-					$recupere = $_SESSION[$i];
+					$keyString = 'key'.$i;
+					$recupere = $_SESSION[$keyString];
 					FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 					$id_receveur=$plouc_connecte->getId();
 					FarceDePloucDbUtilities::updateJoint_personne($id_receveur, $recupere, 'confirme');
@@ -134,6 +135,10 @@
 			//traiter le cas du bouton refuser
 			//probleme : debugger fonctionne pas
 			//erreur affichee lors du chargement de la page (potentiellement $_SESSION qui refuse d'etre modifie)=> convertir $key en string avant de le mettre dans $_session
+
+			//resolution : une clef de $_SESSION ne peut pas commencer par un chiffre (ajout du prefixe key)
+
+			//meilleure solution : value du button peut stocker la clé, ce qui évite de devoir utiliser une boucle lors de la récupération
 		}
 		else 
 		{
