@@ -54,14 +54,13 @@
 				echo "<form method='POST' action ='router.php?handler=Session&action_du_plouc=accepter_refuser'>";
 				$truc=$pote['pseudo'];
 				$id_valeur=$pote['id'];
-				echo "<li>$truc <button type='submit' name='accepter_pote_".$key."'>Accepter</button><button type='submit' name='refuser_pote_".$key."'>Refuser</button></li>";
+				echo "<li>$truc <button type='submit' name='accepter_pote' value='".$key."'>Accepter</button><button type='submit' name='refuser_pote' value='".$key."'>Refuser</button></li>";
 				//probleme de cette solution session contient les id a partir des numero de ligne, on ne sait pas quelle ligne a été choisie par l'utilisateur
-				$keyString = ''.$key;
+				$keyString = 'key'.$key;
 				$_SESSION[$keyString]=$id_valeur;
-				echo "</form>"; 
+				echo "</form>";
 				$key++;
 			}
-			$_SESSION['compteur']=$key;
 	?>
 </body>
 </html> 
