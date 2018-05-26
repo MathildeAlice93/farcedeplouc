@@ -58,7 +58,7 @@
 				//probleme de cette solution session contient les id a partir des numero de ligne, on ne sait pas quelle ligne a été choisie par l'utilisateur
 				$keyString = 'key'.$key;
 				$_SESSION[$keyString]=$id_valeur;
-				echo "</form>"; 
+				echo "</form>";
 				$key++;
 			}
 	?>
