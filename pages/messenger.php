@@ -63,7 +63,7 @@
                             echo "<td>".$personne['prenom']."</td>";
                             echo "<td>".$personne['nom']."</td>";
                             $test_amitie = FarceDePloucDbUtilities::verifyExistingRelationship($plouc_connecte->getId(), $personne['id'])=="confirme";			
-                            $test_conversation = FarceDePloucDbUtilities::verifyMembership($current_conversation->getId(),$personne['id']);
+                            $test_conversation = FarceDePloucDbUtilities::verifyConversationMembership($current_conversation->getId(),$personne['id']);
                             if ($test_amitie and !$test_conversation){
                                 echo "<form method='POST'>";
                                 echo "<td> <button type='submit' name='tralala' value = '".$personne['id']."' formaction='router.php?handler=Session&action_du_plouc=ajouter_pote_dans_convers'>J'ajoute mon pote à la convers !</button> </td>";	

@@ -30,7 +30,7 @@ class FarceDePloucDbUtilities
 	/*localhost signifie que ta base de données est stockée localement*/ {
 		try
 		{
-			if (self::$pdo == null or $pdodb_name != "default")
+			if (isset(self::$pdo) or $pdodb_name != "default")
 			/*Si la connexion n'existe pas ou on a spécifié un nom pour celle-ci, alors on crée une connexion.*/
 			/*Entre accolades tu crées des environnements, ici dans l'environnement de la fonction public static,
 			tu n'as pas créé la variable $pdo, donc tu dois sortir de ton environnment courant et du coup il faut utiliser self
@@ -184,6 +184,27 @@ class FarceDePloucDbUtilities
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
+	public static function getPotesToAccept($id, $limit, $offset = 0)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT p.id, p.nom, p.prenom, p.pseudo
+					FROM personne AS p, joint_personne AS jp
+					WHERE jp.id_receveur = :id AND jp.id_demandeur = p.id 
+						AND jp.statut = :statut
+					ORDER BY p.pseudo ASC
+					LIMIT $offset, $limit;"
+			);
+			$statement->execute(array(
+				':id' => $id,
+				':statut' => 'en_attente',
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
 	public static function getPersonne($id)
 	{
 		try {
@@ -286,6 +307,11 @@ class FarceDePloucDbUtilities
 		{
 			self::$pdo->beginTransaction();
 			$id_convers = self::createConversation($public, $nom);
+			if(empty($liste_de_personnes))
+			{
+				throw new Exception("Il n'y a personne dans cette conversation...");
+				/*throw error renvoie directement vers le catch*/
+			}
 			foreach ($liste_id_personnes as $id_personne) {
 				self::addPeopleToConversation($id_convers, $id_personne);
 			}
@@ -351,23 +377,29 @@ class FarceDePloucDbUtilities
 	}
 	public static function postMessage($id_personne, $id_convers, $contenu)
 	{
-		try
+		if(self::verifyConversationMembership($id_convers, $id_personne))
 		{
-			$statement = self::$pdo->prepare(
-				"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date_envoi`)
-						VALUES (NULL, :id_convers, :id_personne, :contenu, CURRENT_TIMESTAMP);"
-			);
-			$statement->execute(array(
-				':id_convers' => $id_convers,
-				':id_personne' => $id_personne,
-				':contenu' => $contenu,
-			));
-			return 1;
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date_envoi`)
+							VALUES (NULL, :id_convers, :id_personne, :contenu, CURRENT_TIMESTAMP);"
+				);
+				$statement->execute(array(
+					':id_convers' => $id_convers,
+					':id_personne' => $id_personne,
+					':contenu' => $contenu,
+				));
+				return 1;
+			} catch (Exception $e) {
+				die('Erreur : ' . $e->getMessage());
+			}
+		}
+		else{
+			die('Vous ne faites pas partie de la conversation');
 		}
 	}
-	public static function getConversations($id_connecte)
+	public static function getConversations($id_connecte, $limit=50, $offset=0)
 	{
 		try
 		{
@@ -376,7 +408,8 @@ class FarceDePloucDbUtilities
 					FROM conversation
 						JOIN joint_conversation_personne
 						ON conversation.id = joint_conversation_personne.id_conversation
-					WHERE joint_conversation_personne.id_personne = :id_connecte;"
+					WHERE joint_conversation_personne.id_personne = :id_connecte
+					LIMIT $offset, $limit;"
 			);
 			$statement->execute(array(
 				':id_connecte' => $id_connecte,
@@ -422,7 +455,7 @@ class FarceDePloucDbUtilities
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function verifyMembership($id_convers, $id_personne)
+	public static function verifyConversationMembership($id_convers, $id_personne)
 	{
 		try
 		{

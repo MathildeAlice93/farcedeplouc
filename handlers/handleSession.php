@@ -82,8 +82,9 @@ switch ($action_du_plouc) {
 		}
 		break;
 	case 'ajouter_un_pote':
-		if (isset($_POST['tralala']) and !empty($_POST['tralala'])) {
-			$mon_nouveau_pote = $_POST['tralala'];
+		if (isset($_POST['tralala']) and $_POST['tralala']!="") {
+			$keyString='key'.$_POST['tralala'];
+			$mon_nouveau_pote = $_SESSION[$keyString];
 			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 			$id_demandeur = $plouc_connecte->getId();
 			FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "en_attente");
@@ -141,11 +142,12 @@ switch ($action_du_plouc) {
 		//affiche les messages de la conversation sélectionnée
 		if (isset($_SESSION['current_conversation'])) {
 			$current_conversation = unserialize($_SESSION['current_conversation']);
-		} elseif (null !== $_POST['tralala']) {
+		} elseif (isset($_POST['tralala'])){
+			$keyString='key'.$_POST['tralala'];
 			$current_conversation = new Conversation;
 			$membres = [];
 			$membres[] = $plouc_connecte;
-			$mon_pote = FarceDePloucDbUtilities::getPersonne($_POST['tralala']);
+			$mon_pote = FarceDePloucDbUtilities::getPersonne($_SESSION[$keyString]);
 			$plouc_avec_qui_parler = new Personne($id = $mon_pote[0]['id'], $nom = $mon_pote[0]['nom'], $prenom = $mon_pote[0]['prenom'], $pseudo = $mon_pote[0]['pseudo']);
 			$membres[] = $plouc_avec_qui_parler;
 			$current_conversation->setMembres($membres);

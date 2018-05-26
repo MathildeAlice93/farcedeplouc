@@ -6,6 +6,9 @@
 	<meta name = "author" content = "Mathilde Alice Stiernet"/>
 </head>
 <body>
+<?php
+FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+?>
 	<form method='POST'>
 		<button type="submit" formaction = "router.php?handler=Session&action_du_plouc=default">Déconnexion</button>
 	</form>
@@ -47,7 +50,7 @@
 
 	<?php 
 		echo "Amis en attente : "; 
-			$affichage_potes = FarceDePloucDbUtilities::getPotes($plouc_connecte->getId(),'en_attente',7);
+			$affichage_potes = FarceDePloucDbUtilities::getPotesToAccept($plouc_connecte->getId(),7);
 			//Ici on utilise "::" car on fait un appel de classe statique cad qu'on a une seule et unique instance
 			$key=0;
 			foreach($affichage_potes as $pote){
@@ -55,7 +58,6 @@
 				$truc=$pote['pseudo'];
 				$id_valeur=$pote['id'];
 				echo "<li>$truc <button type='submit' name='accepter_pote' value='".$key."'>Accepter</button><button type='submit' name='refuser_pote' value='".$key."'>Refuser</button></li>";
-				//probleme de cette solution session contient les id a partir des numero de ligne, on ne sait pas quelle ligne a été choisie par l'utilisateur
 				$keyString = 'key'.$key;
 				$_SESSION[$keyString]=$id_valeur;
 				echo "</form>";
