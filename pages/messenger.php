@@ -47,11 +47,15 @@
         </form>
     </div>
     <div>
-        <form method="POST">
-            <label for="recherche">Ajouter un ami à la convers: </label>
-            <input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
-            <input type = "submit" name = "search_people_2" formaction = "router.php?handler=Session&action_du_plouc=recherche_pour_ajout_a_discu" value = "Lancer la recherche !" />
-        </form>
+        <?php
+        if (isset($current_conversation)){
+            echo '<form method="POST">
+                <label for="recherche">Ajouter un ami à la convers: </label>
+                <input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
+                <input type = "submit" name = "search_people_2" formaction = "router.php?handler=Session&action_du_plouc=recherche_pour_ajout_a_discu" value = "Lancer la recherche !" />
+                </form>';
+        }
+        ?>
         <?php
             if (isset($affichage_personne))
             {

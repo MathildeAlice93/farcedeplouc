@@ -307,7 +307,7 @@ class FarceDePloucDbUtilities
 		{
 			self::$pdo->beginTransaction();
 			$id_convers = self::createConversation($public, $nom);
-			if(empty($liste_de_personnes))
+			if(empty($liste_id_personnes))
 			{
 				throw new Exception("Il n'y a personne dans cette conversation...");
 				/*throw error renvoie directement vers le catch*/

@@ -145,17 +145,20 @@ switch ($action_du_plouc) {
 		} elseif (isset($_POST['tralala'])){
 			$keyString='key'.$_POST['tralala'];
 			$current_conversation = new Conversation;
+			/*ceci est une nouvelle conversation créée au niveau de php mais pas au niveau de la base de données*/
 			$membres = [];
 			$membres[] = $plouc_connecte;
 			$mon_pote = FarceDePloucDbUtilities::getPersonne($_SESSION[$keyString]);
 			$plouc_avec_qui_parler = new Personne($id = $mon_pote[0]['id'], $nom = $mon_pote[0]['nom'], $prenom = $mon_pote[0]['prenom'], $pseudo = $mon_pote[0]['pseudo']);
 			$membres[] = $plouc_avec_qui_parler;
 			$current_conversation->setMembres($membres);
+			/*ajout de membres à la conversation au niveau php*/
 			$fetched_id_conversation = FarceDePloucDbUtilities::existeConversationPrive($membres[0]->getId(), $membres[1]->getId());
 			if (!empty($fetched_id_conversation[0])) {
 				$current_conversation->setId($fetched_id_conversation[0]["id_conversation"]);
 				/* une conversation existe deja il faut l'afficher */
 				$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
+				/*pas oublier de set le nom de la conversation */
 			} else {
 				/* on cree une nouvelle conversation (aucun message deja ecrit) */
 				$liste_id_personnes = [];
