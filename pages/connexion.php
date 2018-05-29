@@ -27,7 +27,7 @@
 		}
 	</style>
 	<script>
-		window.onload = setup_refresh;
+		window.addEventListener("load", setup_refresh, false);
 		var sentRegistration = false;
 		function erreur($element_faux) {
 			var elem = document.getElementById($element_faux);
@@ -47,7 +47,15 @@
 			registration.addEventListener("submit", submitRegistration, false);
 		}
 		function callF5(event) {
-			if()
+			if(!sentRegistration)
+			{
+				var request = new XMLHttpRequest();
+				while(request.status != 200)
+				{
+					request.open('GET', "requests/refresh.php", false);
+					request.send(null);
+				}
+			}
 		}
 		function submitRegistration(event) {
 			sentRegistration = true;

@@ -9,6 +9,12 @@
 // } 
 /*Création de l'objet personne*/
 
+echo "<script>
+		window.onload = function() {
+			history.replaceState('', '', 'router.php?handler=Registration');
+		}
+		</script>";
+
 $personne = new Personne;
 
 $erreurs = [];
@@ -70,11 +76,9 @@ if (empty($erreurs)) {
 	/*Le mode d'emploi de connectPdodb ets dans modelDatabase mnt tu l'appelle en lui donnant les arguments que tu as défini dans router.php pour te connecter à la bdd.*/
 
 	FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
-	echo "<script>
-		window.onload = function() {
-			history.replaceState('', '', 'router.php?handler=Registration');
-		}
-		</script>";
+	include_once "pages/connexion.php";
+} else if (session_status() != PHP_SESSION_NONE and $_SESSION['refresh']) {
+	session_destroy();
 	include_once "pages/connexion.php";
 } else {
 
