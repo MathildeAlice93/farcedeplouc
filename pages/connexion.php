@@ -27,6 +27,8 @@
 		}
 	</style>
 	<script>
+		window.onload = setup_refresh;
+		var sentRegistration = false;
 		function erreur($element_faux) {
 			var elem = document.getElementById($element_faux);
 			elem.style.backgroundColor = "red";
@@ -38,6 +40,17 @@
 		function set_option($id) {
 			var elem = document.getElementById($id);
 			elem.setAttribute("selected", "selected");
+		}
+		function setup_refresh() {
+			window.onbeforeunload = callF5;
+			var registration = document.getElementById("registration");
+			registration.addEventListener("submit", submitRegistration, false);
+		}
+		function callF5(event) {
+			if()
+		}
+		function submitRegistration(event) {
+			sentRegistration = true;
 		}
 	</script>
 </head>
@@ -89,7 +102,7 @@
 						<a href="">
 							<i class="glyphicon glyphicon-globe"></i>
 						</a> Rejoindre le clan !</legend>
-					<form method="POST" action="router.php" class="form" role="form">
+					<form id="registration" method="POST" action="router.php" class="form" role="form">
 						<div class="row">
 							<div class="col-xs-6 col-md-6">
 								<input class="form-control" name='prenom' id='prenom' placeholder="Ton prénom" type="text" autofocus />
