@@ -50,12 +50,19 @@ switch ($action_du_plouc) {
 					$plouc_connecte->setCourriel($row['courriel']);
 					$plouc_connecte->setMot_de_passe($row['mot_de_passe']);
 				}
+				echo "<script>
+					window.onload = function() {
+						history.replaceState('', '', 'router.php?handler=Session&action_du_plouc=connexion');
+					}
+					</script>";
 
 				include_once "pages/journal.php";
 			} else {
 				//erreur (personne pas dans base de donnnées) (plus tard)
 				include_once "pages/connexion.php";
 			}
+		} else if($plouc_connecte->getId() != "") {
+			include_once "pages/journal.php";
 		} else {
 			//traiter l'erreur plus tard (champs invalides)
 			include_once "pages/connexion.php";
