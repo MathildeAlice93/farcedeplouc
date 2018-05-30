@@ -41,6 +41,7 @@
 			var elem = document.getElementById($id);
 			elem.setAttribute("selected", "selected");
 		}
+		/* probablement inutile ... x)*/
 		function setup_refresh() {
 			window.onbeforeunload = callF5;
 			var registration = document.getElementById("registration");

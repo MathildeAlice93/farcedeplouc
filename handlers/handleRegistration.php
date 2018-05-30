@@ -83,7 +83,7 @@ if (empty($erreurs)) {
 
 	FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
 	include_once "pages/connexion.php";
-} else if ($_SESSION['refresh']) {
+} else if (empty($_POST)) {
 	session_destroy();
 	include_once "pages/connexion.php";
 } else {
