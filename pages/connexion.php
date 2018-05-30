@@ -50,7 +50,7 @@
 			if(!sentRegistration)
 			{
 				var request = new XMLHttpRequest();
-				while(request.status != 200)
+				while(!(request.readyState == 4 && request.status == 200))
 				{
 					request.open('GET', "requests/refresh.php", false);
 					request.send(null);
