@@ -27,8 +27,9 @@
 		}
 	</style>
 	<script>
-		window.addEventListener("load", setup_refresh, false);
-		var sentRegistration = false;
+		// Ajout d'un écouteur d'évènement "chargement de page"
+		// window.addEventListener("load", setup_refresh, false);
+		// var sentRegistration = false;
 		function erreur($element_faux) {
 			var elem = document.getElementById($element_faux);
 			elem.style.backgroundColor = "red";
@@ -41,26 +42,26 @@
 			var elem = document.getElementById($id);
 			elem.setAttribute("selected", "selected");
 		}
-		/* probablement inutile ... x)*/
-		function setup_refresh() {
-			window.onbeforeunload = callF5;
-			var registration = document.getElementById("registration");
-			registration.addEventListener("submit", submitRegistration, false);
-		}
-		function callF5(event) {
-			if(!sentRegistration)
-			{
-				var request = new XMLHttpRequest();
-				while(!(request.readyState == 4 && request.status == 200))
-				{
-					request.open('GET', "requests/refresh.php", false);
-					request.send(null);
-				}
-			}
-		}
-		function submitRegistration(event) {
-			sentRegistration = true;
-		}
+		// Ces fonction servent à enregistrer l'évènement 'F5' et l'envoyer au serveur avec de l'Ajax synchrone
+		// function setup_refresh() {
+		// 	window.onbeforeunload = callF5;
+		// 	var registration = document.getElementById("registration");
+		// 	registration.addEventListener("submit", submitRegistration, false);
+		// }
+		// function callF5(event) {
+		// 	if(!sentRegistration)
+		// 	{
+		// 		var request = new XMLHttpRequest();
+		// 		while(!(request.readyState == 4 && request.status == 200))
+		// 		{
+		// 			request.open('GET', "requests/refresh.php", false);
+		// 			request.send(null);
+		// 		}
+		// 	}
+		// }
+		// function submitRegistration(event) {
+		// 	sentRegistration = true;
+		// }
 	</script>
 </head>
 

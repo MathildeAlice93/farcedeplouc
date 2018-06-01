@@ -1,19 +1,11 @@
 <?php
-// echo "<script>
-// 					window.onload = function() {
-// 						history.replaceState('', '', 'router.php?handler=Registration');
-// 					}
-// 					</script>";
-// else if($plouc_connecte->getId() != "") {
-// 	include_once "pages/journal.php";
-// } 
-/*Création de l'objet personne*/
 
-session_name("refresh");
-session_start();
-if(!isset($_SESSION['refresh'])){
-	$_SESSION['refresh'] = false;
-}
+#Utilisation de session nommées
+// session_name("refresh");
+// session_start();
+// if(!isset($_SESSION['refresh'])){
+// 	$_SESSION['refresh'] = false;
+// }
 
 echo "<script>
 		window.onload = function() {
@@ -22,6 +14,7 @@ echo "<script>
 		</script>";
 
 $personne = new Personne;
+/*Création de l'object personne*/
 
 $erreurs = [];
 
@@ -84,7 +77,9 @@ if (empty($erreurs)) {
 	FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
 	include_once "pages/connexion.php";
 } else if (empty($_POST)) {
-	session_destroy();
+	/*Au lieu d'utiliser Ajax on a finalement décidé d'utiliser la méthode suivante qui est plus symple
+	Afin de vérifier si on a fait F5 ou non il suffit de vérifier si la variable PHP POST est vide ou non
+	En effet, puisqu'on supprime a chaque fois l'historique avec le script ci-dessus */
 	include_once "pages/connexion.php";
 } else {
 

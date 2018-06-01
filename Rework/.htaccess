@@ -1,0 +1,11 @@
+#Le fichier s'appelle .htaccess car Apache est configuré pour chercher un fichier de ce nom. 
+#Pour rappel ce fichier permet de créer des règles de nomenclature d'URL.
+#Attention le fichier intermédiaire nommé Rework va dans un second temps être supprimé, il faudra adapter RewriteBase à cela.
+#Windows n'est pas sensible à la casse pour le nom des dossiers et fichiers, contrairement à Linux.
+#ATTENTION : une fonctionnalité de PHP a été désactivée (GET), pour la remettre ajouter ceci après la rewrite rule: [QSA]
+#Inutile cependant d'écrire PT sur la deuxième car on capture une chaine vide, et on aura jamais d'alias sur un chaine vide
+
+RewriteEngine On
+RewriteBase "/farce_de_plouc/Rework/"
+RewriteRule "^(.*)$" "router.php?page=$1" [PT]
+RewriteRule "^$" "router.php"
