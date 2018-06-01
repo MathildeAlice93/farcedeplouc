@@ -9,6 +9,12 @@
 // } 
 /*Création de l'objet personne*/
 
+session_name("refresh");
+session_start();
+if(!isset($_SESSION['refresh'])){
+	$_SESSION['refresh'] = false;
+}
+
 echo "<script>
 		window.onload = function() {
 			history.replaceState('', '', 'router.php?handler=Registration');
@@ -77,7 +83,7 @@ if (empty($erreurs)) {
 
 	FarceDePloucDbUtilities::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
 	include_once "pages/connexion.php";
-} else if (session_status() != PHP_SESSION_NONE and $_SESSION['refresh']) {
+} else if (empty($_POST)) {
 	session_destroy();
 	include_once "pages/connexion.php";
 } else {

@@ -41,6 +41,7 @@
 			var elem = document.getElementById($id);
 			elem.setAttribute("selected", "selected");
 		}
+		/* probablement inutile ... x)*/
 		function setup_refresh() {
 			window.onbeforeunload = callF5;
 			var registration = document.getElementById("registration");
@@ -50,7 +51,7 @@
 			if(!sentRegistration)
 			{
 				var request = new XMLHttpRequest();
-				while(request.status != 200)
+				while(!(request.readyState == 4 && request.status == 200))
 				{
 					request.open('GET', "requests/refresh.php", false);
 					request.send(null);
