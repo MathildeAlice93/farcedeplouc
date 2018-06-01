@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase "/apps/farcedeplouc_fork_sub/"
+RewriteRule "^router.php(.*)$" "router.php?page=$1" [PT,QSA]
+RewriteRule "^$" "router.php"
