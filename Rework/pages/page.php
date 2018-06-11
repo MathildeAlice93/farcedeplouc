@@ -9,13 +9,19 @@ class Page
         $this->headSegmentsList = $headSegmentsList; 
         $this->bodySegmentsList = $bodySegmentsList;
 
+        $this->htmlOpen();
+        $this->headOpen(); 
         foreach ($headSegmentsList as $headSegment){
             include_once "pages/html/".$headSegment;
         }
-
+        $this->headClose(); 
+        $this->bodyOpen(); 
         foreach ($bodySegmentsList as $bodySegment){
             include_once "pages/html/".$bodySegment;
         }
+        $this->bodyClose(); 
+
+        $this->htmlClose(); 
     }
     public function htmlOpen()
     {
