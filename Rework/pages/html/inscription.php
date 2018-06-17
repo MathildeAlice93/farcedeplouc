@@ -59,8 +59,8 @@
           </div>
           <br />
           <br />
-          <input type="submit" class="btn btn-lg btn-primary btn-block" name="registration" formaction="router.php?handler=Registration"
-            value="Je deviens plouc !" />
+          <button type="submit" class="btn btn-lg btn-primary btn-block" name="submit" formaction="router.php?handler=Registration"
+            value="registration:registration"> Inscription </button>
         </form>
       </div>
     </div>

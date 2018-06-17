@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-9 col-sm-4 col-md-4">
-                    <img class="img-responsive" src="images/fardeplo.png" /></img>
+                    <img class="img-responsive" src="images/fardeplo.png"/>
                 </div>
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -14,7 +14,7 @@
                     </button>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <form id="signin" class="navbar-form navbar-right" role="form" method="POST" action="router.php">
+                    <form id="signin" class="navbar-form navbar-right" role="form" method="POST" action="">
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-user"></i>
@@ -28,8 +28,7 @@
                             </span>
                             <input id="connect_mot_de_passe" type="password" class="form-control" name="connect_mot_de_passe" value="" placeholder="Code secret">
                         </div>
-                        <input type="submit" class="btn btn-primary" name="connexion" formaction="router.php?handler=Session&action_du_plouc=connexion"
-                            value="Le clan me manque" />
+                        <button type="submit" class="btn btn-primary" name="submit" formaction="" value="session:connection">Connexion</button>
                     </form>
                 </div>
             </div>

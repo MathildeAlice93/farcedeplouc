@@ -6,6 +6,5 @@
 #Inutile cependant d'écrire PT sur la deuxième car on capture une chaine vide, et on aura jamais d'alias sur un chaine vide
 
 RewriteEngine On
-RewriteBase "/farce_de_plouc/Rework/"
-RewriteRule "^(.*)$" "router.php?page=$1" [PT]
+RewriteBase "/farce_de_plouc/rework/"
 RewriteRule "^$" "router.php"
