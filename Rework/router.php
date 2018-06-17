@@ -18,7 +18,7 @@ if(!empty($_POST['submit'])){
     $submitExplodedValues = explode(":", $submitValue); 
     $handler = $submitExplodedValues[0]; 
     $action = $submitExplodedValues[1]; 
-    //...
+    //... comment faire pour appeler une fonction a partir d'un string
 }
 else{
     Manager::connection(); 
