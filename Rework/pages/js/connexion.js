@@ -1,12 +1,12 @@
-function erreur($element_faux) {
+function error($element_faux) {
     var elem = document.getElementById($element_faux);
     elem.style.backgroundColor = "red";
 }
-function set_value($id, $valeur) {
+function setValue($id, $valeur) {
     var elem = document.getElementById($id);
     elem.setAttribute("value", $valeur);
 }
-function set_option($id) {
+function setOption($id) {
     var elem = document.getElementById($id);
     elem.setAttribute("selected", "selected");
 }

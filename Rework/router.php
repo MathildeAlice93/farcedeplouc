@@ -1,8 +1,9 @@
 <?php
 /* inclusions */
-// include_once "models/Database.php";
-// include_once "models/Person.php";
-// include_once "models/Conversation.php";
+include_once "database.php";
+include_once "sessionobjects/person.php";
+include_once "sessionobjects/conversation.php";
+include_once "handlers/registration.php";
 include_once "pages/manager.php";
 include_once "pages/page.php"; 
 
@@ -16,9 +17,10 @@ $password = "";
 if(!empty($_POST['submit'])){
     $submitValue = $_POST['submit']; 
     $submitExplodedValues = explode(":", $submitValue); 
-    $handler = $submitExplodedValues[0]; 
+    $handler = $submitExplodedValues[0];
     $action = $submitExplodedValues[1]; 
     //... comment faire pour appeler une fonction a partir d'un string test
+    $handler::$action();
 }
 else{
     Manager::connection(); 
