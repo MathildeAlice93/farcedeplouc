@@ -1,3 +1,6 @@
+window.onload = function() {
+    history.replaceState('', '', 'router.php?handler=Registration');
+}
 function error($element_faux) {
     var elem = document.getElementById($element_faux);
     elem.style.backgroundColor = "red";

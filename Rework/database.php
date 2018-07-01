@@ -1,19 +1,13 @@
 <?php
-/**instal
- * @author Mathilde Alice Stiernet
- */
 
-/**
- * provide tools to use a farce_de_plouc database
- */
 class Database
 {
 	/* current pdo connection informations */
 	private static $pdo = null;
-	private static $cur_host = null;
-	private static $cur_pdodb_name = null;
-	private static $cur_username = null;
-	private static $cur_password = null;
+	private static $host = null;
+	private static $dbName = null;
+	private static $username = null;
+	private static $password = null;
 
 	/**
 	 * establish and return a pdo connection and create a database if necessary
@@ -26,72 +20,112 @@ class Database
 	 * @return PDO pdo : connection between php and database server)
 	 */
 
-	public static function connectPdodb($pdodb_name = "default", $host = "localhost", $username = "", $password = "")
+	 //connection
+	public static function constructPDO($dbName = "default", $host = "localhost", $username = "", $password = "")
 	/*localhost signifie que ta base de données est stockée localement*/ {
 		try
 		{
-			if (isset(self::$pdo) or $pdodb_name != "default")
-			/*Si la connexion n'existe pas ou on a spécifié un nom pour celle-ci, alors on crée une connexion.*/
-			/*Entre accolades tu crées des environnements, ici dans l'environnement de la fonction public static,
-			tu n'as pas créé la variable $pdo, donc tu dois sortir de ton environnment courant et du coup il faut utiliser self
-			 */
+			if (isset(self::$pdo) or $dbName != "default")
 			{
-				self::$cur_host = $host;
-				self::$cur_pdodb_name = $pdodb_name;
-				self::$cur_username = $username;
-				self::$cur_password = $password;
-				self::$pdo = new PDO("mysql:host = " . self::$cur_host, self::$cur_username, self::$cur_password);
+				self::$host = $host;
+				self::$dbName = $dbName;
+				self::$username = $username;
+				self::$password = $password;
+				self::$pdo = new PDO("mysql:host = " . self::$host, self::$username, self::$password);
 				self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-				self::$pdo->exec("CREATE DATABASE IF NOT EXISTS " . self::$cur_pdodb_name); /*c'est cette ligne qui t'impose d'avoir un pdo name égal au nom de ta base de données*/
-				self::$pdo->exec("USE " . self::$cur_pdodb_name);
-				/*self::createReservationTable();
-				self::createPeopleTable();*/
-				/*permet de recréer les tables de ta base de données si elles devaient être inexistantes*/
+				self::$pdo->exec("CREATE DATABASE IF NOT EXISTS " . self::$dbName); 
+				self::$pdo->exec("USE " . self::$dbName);
 			} else
-			/*Sinon on utilise celle qu'on a déjà.*/
 			{
-				self::$pdo->exec("USE " . self::$cur_pdodb_name);
+				self::$pdo->exec("USE " . self::$dbName);
 			}
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
-			/*getMessage est une fonction de la classe Exception qui permet d'afficher le message d'erreur*/
-			/*comment savoir que c'est une fonction de la classe Exception? parce que tu applique la fct à $e
-		et $e a été défini comme étant une instance de la classe Exception*/
 		}
 	}
 
-	/**
-	 * insert values in tables "personne"
-	 * @return void
-	 */
-
-	public static function addPersonne($nom, $prenom, $pseudo, $date_anniversaire, $courriel, $mot_de_passe)
+	/* fonctions relatives à la table Personne */
+	public static function addPerson($lastName, $firstName, $nickname, $birthDate, $email, $password)
 	{
-		//insert data into "personne"
 		try
-		/*try est utilisé en cas de risque d'erreur*/
-		/*le try te permettre de définir ta gestion personnelle de cas problématiques éventuels, les traitements d'erreurs suivront ta définition et pas une définition par défaut*/
 		{
 			$statement = self::$pdo->prepare(
 				"INSERT INTO personne(id, nom, prenom, pseudo, date_anniversaire, date_inscription, courriel, mot_de_passe)
 						VALUES (NULL, :nom, :prenom, :pseudo, :date_anniversaire, CURRENT_TIMESTAMP, :courriel, :mot_de_passe);"
 			);
 			$statement->execute(array(
-				'nom' => $nom,
-				'prenom' => $prenom,
-				'pseudo' => $pseudo,
-				'date_anniversaire' => $date_anniversaire,
-				'courriel' => $courriel,
-				'mot_de_passe' => $mot_de_passe,
+				'nom' => $lastName,
+				'prenom' => $firstName,
+				'pseudo' => $nickname,
+				'date_anniversaire' => $birthDate,
+				'courriel' => $email,
+				'mot_de_passe' => $password,
 			));
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function addJoint_personne($id_demandeur, $id_receveur, $statut)
-	/*static : veut dire qu'il s'agit d'une classe statique qui a une instance unique*/ {
-		if (self::verifyExistingRelationship($id_demandeur, $id_receveur) == 'confirme') {
-			/*j'appelle une fonction de la propre classe (model database)*/
+	public static function getPerson($id)
+	{
+		try {
+			$statement = self::$pdo->prepare(
+				"SELECT id, nom, prenom, pseudo, date_anniversaire, courriel
+					FROM personne
+					WHERE id = :id;"
+			);
+			$statement->execute(array(
+				':id' => $id,
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	public static function isValidPerson($email, $password)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT *
+					FROM personne
+					WHERE personne.courriel = :courriel AND personne.mot_de_passe = :mot_de_passe;"
+			);
+			$statement->execute(array(
+				'courriel' => $email,
+				'mot_de_passe' => $password,
+			));
+			$line = $statement->fetchAll();
+			if (count($line) == 1) {
+				return $line;
+			} else {
+				return false;
+			}
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	public static function searchPeople($userSearch, $idConnectedUser)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT *
+					FROM personne
+					WHERE (personne.nom = :wanted_plouc OR personne.pseudo = :wanted_plouc OR personne.prenom = :wanted_plouc) AND personne.id <> :ma_variable_id;"
+			);
+			$statement->execute(array(
+				'wanted_plouc' => $userSearch,
+				'ma_variable_id' => $idConnectedUser,
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	/* fonctions relatives à la relation entre personnes (table join_person) */
+	public static function addJoinPerson($idRequestor, $idReceiver, $status)
+	{
+		if (self::verifyExistingRelationship($idRequestor, $idReceiver) == 'confirme') {
 			return 0;
 		}
 		try
@@ -101,90 +135,16 @@ class Database
 						VALUES (:id_demandeur, :id_receveur, :statut, CURRENT_TIMESTAMP, NULL);"
 			);
 			$statement->execute(array(
-				'id_demandeur' => $id_demandeur,
-				'id_receveur' => $id_receveur,
-				'statut' => $statut,
+				'id_demandeur' => $idRequestor,
+				'id_receveur' => $idReceiver,
+				'statut' => $status,
 			));
 			return 1;
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function updateJoint_personne($id_receveur, $mon_nouveau_pote, $statut)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"UPDATE joint_personne
-					SET statut = :statut
-					WHERE (id_receveur = :id_receveur AND id_demandeur = :mon_nouveau_pote);"
-			);
-			$statement->execute(array(
-				'id_receveur' => $id_receveur,
-				'mon_nouveau_pote' => $mon_nouveau_pote,
-				'statut' => $statut,
-			));
-			return 1;
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-	public static function verifyExistingRelationship($id_demandeur, $id_receveur)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				/*on insère des variables php dans une requête mysql*/
-				"SELECT id_demandeur, id_receveur, statut
-					FROM joint_personne
-					WHERE id_demandeur = :id_demandeur AND id_receveur = :id_receveur
-					OR id_demandeur = :id_receveur AND id_receveur = :id_demandeur;"
-			);
-			$statement->execute(array(
-				'id_demandeur' => $id_demandeur,
-				'id_receveur' => $id_receveur,
-			));
-			$resultat = $statement->fetchAll();
-			if (!empty($resultat)) {
-				if ($resultat[0]["statut"] == 'confirme') {
-					return "confirme";
-				} else if ($resultat[0]["statut"] == 'en_attente') {
-					return "en_attente";
-				} else {
-					return "refuse";
-				}
-			} else {
-				return "refuse";
-			}
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-	public static function getPotes($id, $statut, $limit, $offset = 0)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"SELECT p.id, p.nom, p.prenom, p.pseudo
-					FROM personne AS p, joint_personne AS jp
-					WHERE (
-							jp.id_demandeur = :id AND jp.id_receveur = p.id
-							OR jp.id_receveur = :id AND jp.id_demandeur = p.id
-						)
-						AND jp.statut = :statut
-					ORDER BY p.pseudo ASC
-					LIMIT $offset, $limit;"
-			);
-			$statement->execute(array(
-				':id' => $id,
-				':statut' => $statut,
-			));
-			return $statement->fetchAll();
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-	public static function getPotesToAccept($id, $limit, $offset = 0)
+	public static function getPendingFriendsRequests($id, $limit, $offset = 0)
 	{
 		try
 		{
@@ -205,78 +165,110 @@ class Database
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function getPersonne($id)
+	public static function getRelatedPersonByStatus($id, $status, $limit, $offset = 0)
 	{
-		try {
+		try
+		{
 			$statement = self::$pdo->prepare(
-				"SELECT id, nom, prenom, pseudo
-					FROM personne
-					WHERE id = :id;"
+				"SELECT p.id, p.nom, p.prenom, p.pseudo
+					FROM personne AS p, joint_personne AS jp
+					WHERE (
+							jp.id_demandeur = :id AND jp.id_receveur = p.id
+							OR jp.id_receveur = :id AND jp.id_demandeur = p.id
+						)
+						AND jp.statut = :statut
+					ORDER BY p.pseudo ASC
+					LIMIT $offset, $limit;"
 			);
 			$statement->execute(array(
 				':id' => $id,
+				':statut' => $status,
 			));
 			return $statement->fetchAll();
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function getInfos($id)
+	public static function updateJoinPerson($idReceiver, $idRequestor, $status)
 	{
 		try
 		{
 			$statement = self::$pdo->prepare(
-				"CALL afficher_infos($id);"
-			);
-			$statement->execute(array());
-			return $statement->fetchAll();
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-
-	public static function isValidPerson($courriel, $mot_de_passe)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"SELECT *
-					FROM personne
-					WHERE personne.courriel = :courriel AND personne.mot_de_passe = :mot_de_passe;"
+				"UPDATE joint_personne
+					SET statut = :statut
+					WHERE (id_receveur = :id_receveur AND id_demandeur = :mon_nouveau_pote);"
 			);
 			$statement->execute(array(
-				'courriel' => $courriel,
-				'mot_de_passe' => $mot_de_passe,
+				'id_receveur' => $idReceiver,
+				'mon_nouveau_pote' => $idRequestor,
+				'statut' => $status,
 			));
-			$line = $statement->fetchAll();
-			if (count($line) == 1) {
-				return $line;
+			return 1;
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	public static function verifyExistingRelationship($idRequestor, $idReceiver)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT id_demandeur, id_receveur, statut
+					FROM joint_personne
+					WHERE id_demandeur = :id_demandeur AND id_receveur = :id_receveur
+					OR id_demandeur = :id_receveur AND id_receveur = :id_demandeur;"
+			);
+			$statement->execute(array(
+				'id_demandeur' => $idRequestor,
+				'id_receveur' => $idReceiver,
+			));
+			$resultat = $statement->fetchAll();
+			if (!empty($resultat)) {
+				if ($resultat[0]["statut"] == 'confirme') {
+					return "confirme";
+				} else if ($resultat[0]["statut"] == 'en_attente') {
+					return "en_attente";
+				} else {
+					return "refuse";
+				}
 			} else {
-				return false;
+				return "refuse";
 			}
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function searchPeople($wanted_plouc, $plouc_connecte_id)
-	{
+	/* fonctions relatives aux conversations */
+	public static function addMemberToConversation($idPerson, $idConversation)
+	/*static : veut dire qu'il s'agit d'une classe statique qui a une instance unique*/ {
 		try
 		{
 			$statement = self::$pdo->prepare(
-				"SELECT *
-					FROM personne
-					WHERE (personne.nom = :wanted_plouc OR personne.pseudo = :wanted_plouc OR personne.prenom = :wanted_plouc) AND personne.id <> :ma_variable_id;"
+				"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_invitation)
+						VALUES (:id_convers, :id_personne, NULL, CURRENT_TIMESTAMP);"
 			);
 			$statement->execute(array(
-				'wanted_plouc' => $wanted_plouc,
-				'ma_variable_id' => $plouc_connecte_id,
+				'id_convers' => $idConversation,
+				'id_personne' => $idPerson,
 			));
-			return $statement->fetchAll();
+			return 1;
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	private static function createConversation($public, $titre = null)
+	private static function addPeopleToConversation($idConversation, $idPerson)
+	{
+		$statement = self::$pdo->prepare(
+			"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_invitation)
+				VALUES (:id_conversation, :id_personne, NULL, CURRENT_TIMESTAMP);"
+		);
+		$statement->execute(array(
+			':id_conversation' => $idConversation,
+			':id_personne' => $idPerson,
+		));
+		return 1;
+	}
+	private static function createConversation($public, $title = null)
 	{
 
 		$statement = self::$pdo->prepare(
@@ -284,50 +276,123 @@ class Database
 				VALUES (NULL, CURRENT_TIMESTAMP, :titre, :public);"
 		);
 		$statement->execute(array(
-			':titre' => $titre,
+			':titre' => $title,
 			':public' => $public,
 		));
 		return self::$pdo->lastInsertId();
 	}
-	private static function addPeopleToConversation($id_conversation, $id_personne)
-	/*Ici j'ai mis la fonction en private car elle n'est sensée etre appelee que par createConversationWith, pas par l'utilisateur directement */ {
-		$statement = self::$pdo->prepare(
-			"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_invitation)
-				VALUES (:id_conversation, :id_personne, NULL, CURRENT_TIMESTAMP);"
-		);
-		$statement->execute(array(
-			':id_conversation' => $id_conversation,
-			':id_personne' => $id_personne,
-		));
-		return 1;
-	}
-	public static function createConversationWith($public, $liste_id_personnes, $nom = null)
+	public static function createConversationWith($public, $idPersonsList, $name = null)
 	{
 		try
 		{
 			self::$pdo->beginTransaction();
-			$id_convers = self::createConversation($public, $nom);
-			if(empty($liste_id_personnes))
+			$idConversation = self::createConversation($public, $name);
+			if(empty($idPersonsList))
 			{
 				throw new Exception("Il n'y a personne dans cette conversation...");
-				/*throw error renvoie directement vers le catch*/
 			}
-			foreach ($liste_id_personnes as $id_personne) {
-				self::addPeopleToConversation($id_convers, $id_personne);
+			foreach ($idPersonsList as $idPerson) {
+				self::addPeopleToConversation($idConversation, $idPerson);
 			}
 			self::$pdo->commit();
-			return $id_convers;
+			return $idConversation;
 		} catch (Exception $e) {
 			self::$pdo->rollback();
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function existeConversationPrive($id_connecte, $id_demande)
+	public static function getAllMessagesFromConversation($idConversation)
 	{
 		try
 		{
-			$id_max = max($id_connecte, $id_demande);
-			$id_min = min($id_connecte, $id_demande);
+			$statement = self::$pdo->prepare(
+				"SELECT conversation.titre, pseudo, contenu, `date_envoi`
+					FROM message
+						JOIN conversation
+							ON conversation.id = message.id_conversation
+						JOIN personne
+							ON personne.id = message.id_expediteur
+					WHERE conversation.id = :id_conversation
+					ORDER BY `date_envoi`; "
+			);
+			$statement->execute(array(
+				':id_conversation' => $idConversation,
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	public static function getConversationMembers($idConversation)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT personne.nom, personne.pseudo, personne.prenom, personne.id
+					FROM joint_conversation_personne
+						JOIN personne
+						ON joint_conversation_personne.id_personne = personne.id
+					WHERE joint_conversation_personne.id_conversation = :id_conversation;"
+			);
+			$statement->execute(array(
+				':id_conversation' => $idConversation,
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	public static function getUserConversations($idConnectedUser, $limit=50, $offset=0)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT conversation.*
+					FROM conversation
+						JOIN joint_conversation_personne
+						ON conversation.id = joint_conversation_personne.id_conversation
+					WHERE joint_conversation_personne.id_personne = :id_connecte
+					LIMIT $offset, $limit;"
+			);
+			$statement->execute(array(
+				':id_connecte' => $idConnectedUser,
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
+	public static function postMessage($idPerson, $idConversation, $content)
+	{
+		if(self::verifyConversationMembership($idConversation, $idPerson))
+		{
+			try
+			{
+				$statement = self::$pdo->prepare(
+					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date_envoi`)
+							VALUES (NULL, :id_convers, :id_personne, :contenu, CURRENT_TIMESTAMP);"
+				);
+				$statement->execute(array(
+					':id_convers' => $idConversation,
+					':id_personne' => $idPerson,
+					':contenu' => $content,
+				));
+				return 1;
+			} catch (Exception $e) {
+				die('Erreur : ' . $e->getMessage());
+			}
+		}
+		else{
+			die('Vous ne faites pas partie de la conversation');
+		}
+	}
+	public static function privateConversationExistence($idConnectedUser, $idInterlocutor)
+	{
+		//probleme si conversation groupe perd membres jusque 2 => conflit entre conversation privée et groupe conversation de 2 personnes (lequel sera choisi par cette fonction?)
+		try
+		{
+			$idMax = max($idConnectedUser, $idInterlocutor);
+			$idMin = min($idConnectedUser, $idInterlocutor);
 			$statement = self::$pdo->prepare(
 				"SELECT jcp1.id_conversation
 					FROM joint_conversation_personne AS jcp1,
@@ -344,118 +409,15 @@ class Database
 					;"
 			);
 			$statement->execute(array(
-				':id_connecte' => $id_max,
-				'id_demande' => $id_min,
+				':id_connecte' => $idMax,
+				'id_demande' => $idMin,
 			));
 			return $statement->fetchAll();
 		} catch (Exception $e) {
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function getAllMessagesFromConversation($id_conversation)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"SELECT conversation.titre, pseudo, contenu, `date_envoi`
-					FROM message
-						JOIN conversation
-							ON conversation.id = message.id_conversation
-						JOIN personne
-							ON personne.id = message.id_expediteur
-					WHERE conversation.id = :id_conversation
-					ORDER BY `date_envoi`; "
-			);
-			$statement->execute(array(
-				':id_conversation' => $id_conversation,
-			));
-			return $statement->fetchAll();
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-
-	}
-	public static function postMessage($id_personne, $id_convers, $contenu)
-	{
-		if(self::verifyConversationMembership($id_convers, $id_personne))
-		{
-			try
-			{
-				$statement = self::$pdo->prepare(
-					"INSERT INTO message(id, id_conversation, id_expediteur, contenu, `date_envoi`)
-							VALUES (NULL, :id_convers, :id_personne, :contenu, CURRENT_TIMESTAMP);"
-				);
-				$statement->execute(array(
-					':id_convers' => $id_convers,
-					':id_personne' => $id_personne,
-					':contenu' => $contenu,
-				));
-				return 1;
-			} catch (Exception $e) {
-				die('Erreur : ' . $e->getMessage());
-			}
-		}
-		else{
-			die('Vous ne faites pas partie de la conversation');
-		}
-	}
-	public static function getConversations($id_connecte, $limit=50, $offset=0)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"SELECT conversation.*
-					FROM conversation
-						JOIN joint_conversation_personne
-						ON conversation.id = joint_conversation_personne.id_conversation
-					WHERE joint_conversation_personne.id_personne = :id_connecte
-					LIMIT $offset, $limit;"
-			);
-			$statement->execute(array(
-				':id_connecte' => $id_connecte,
-			));
-			return $statement->fetchAll();
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-	public static function getMembresConversation($id_conversation)
-	{
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"SELECT personne.nom, personne.pseudo, personne.prenom, personne.id
-					FROM joint_conversation_personne
-						JOIN personne
-						ON joint_conversation_personne.id_personne = personne.id
-					WHERE joint_conversation_personne.id_conversation = :id_conversation;"
-			);
-			$statement->execute(array(
-				':id_conversation' => $id_conversation,
-			));
-			return $statement->fetchAll();
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-	public static function addMemberToConversation($id_personne, $id_convers)
-	/*static : veut dire qu'il s'agit d'une classe statique qui a une instance unique*/ {
-		try
-		{
-			$statement = self::$pdo->prepare(
-				"INSERT INTO joint_conversation_personne(id_conversation, id_personne, date_lecture, date_invitation)
-						VALUES (:id_convers, :id_personne, NULL, CURRENT_TIMESTAMP);"
-			);
-			$statement->execute(array(
-				'id_convers' => $id_convers,
-				'id_personne' => $id_personne,
-			));
-			return 1;
-		} catch (Exception $e) {
-			die('Erreur : ' . $e->getMessage());
-		}
-	}
-	public static function verifyConversationMembership($id_convers, $id_personne)
+	public static function verifyConversationMembership($idConversation, $idPerson)
 	{
 		try
 		{
@@ -466,8 +428,8 @@ class Database
 					AND joint_conversation_personne.id_personne = :id_personne;"
 			);
 			$statement->execute(array(
-				':id_conversation' => $id_convers,
-				':id_personne' => $id_personne,
+				':id_conversation' => $idConversation,
+				':id_personne' => $idPerson,
 			));
 			$resultat_brut = $statement->fetchAll();
 			if ($resultat_brut[0][0] > 0) {

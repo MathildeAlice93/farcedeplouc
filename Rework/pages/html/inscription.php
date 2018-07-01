@@ -30,8 +30,8 @@
               <select id='jour' name="jour" class="form-control">
                 <option value="" disabled selected>Jour</option>
                 <?php 
-										for ($Day = 1; $Day <= 31; $Day++) {
-											echo "<option id='jour_".$Day."' value='".$Day."' placeholder='Day'>".$Day."</option>";
+										for ($day = 1; $day <= 31; $day++) {
+											echo "<option id='jour_".$day."' value='".$day."' placeholder='Day'>".$day."</option>";
 										}
 									?>
               </select>
@@ -40,8 +40,8 @@
               <select id='mois' name="mois" class="form-control">
                 <option value="" disabled selected>Mois</option>
                 <?php 
-										for ($Month = 1; $Month <= 12; $Month++) {
-											echo "<option id='mois_".$Month."' value='".$Month."'>".$Month."</option>";
+										for ($month = 1; $month <= 12; $month++) {
+											echo "<option id='mois_".$month."' value='".$month."'>".$month."</option>";
 										}
 									?>
               </select>
@@ -50,8 +50,8 @@
               <select id='an' name="annee" class="form-control">
                 <option value="" disabled selected>Année</option>
                 <?php 
-										for ($Year = date("Y"); $Year >= 1900; $Year--) {
-											echo "<option id='annee_".$Year."' value='".$Year."'>".$Year."</option>";
+										for ($year = date("Y"); $year >= 1900; $year--) {
+											echo "<option id='annee_".$year."' value='".$year."'>".$year."</option>";
 										}
 									?>
               </select>

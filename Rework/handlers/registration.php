@@ -28,7 +28,6 @@ class Registration
         } else {
             $errorsArray['7'] = 'courriel';
             $errorsArray['8'] = 'courriel_bis';
-            #erreur : on teste les deux en même temps donc on sait pas précisemnt lequel des deux n'était pas rempli
         }
         if (!(isset($_POST['mot_de_passe']) and !empty($_POST['mot_de_passe']))) {
             $errorsArray['9'] = 'mot_de_passe';
@@ -42,44 +41,44 @@ class Registration
         else{
             Manager::connection();
             if (isset($_POST['nom']) and !empty($_POST['nom'])) {
-                $waarde = $_POST['nom'];
+                $value = $_POST['nom'];
                 $id = 'nom';
-                echo "<script> setValue('" . $id . "','" . $waarde . "'); </script>";
+                echo "<script> setValue('" . $id . "','" . $value . "'); </script>";
             }
             if (isset($_POST['prenom']) and !empty($_POST['prenom'])) {
-                $waarde = $_POST['prenom'];
+                $value = $_POST['prenom'];
                 $id = 'prenom';
-                echo "<script> setValue('" . $id . "','" . $waarde . "'); </script>";
+                echo "<script> setValue('" . $id . "','" . $value . "'); </script>";
             }
             if (isset($_POST['pseudo']) and !empty($_POST['pseudo'])) {
-                $waarde = $_POST['pseudo'];
+                $value = $_POST['pseudo'];
                 $id = 'pseudo';
-                echo "<script> setValue('" . $id . "','" . $waarde . "'); </script>";
+                echo "<script> setValue('" . $id . "','" . $value . "'); </script>";
             }
             if (isset($_POST['jour']) and !empty($_POST['jour'])) {
-                $waarde = $_POST['jour'];
-                $id = 'jour_' . $waarde;
+                $value = $_POST['jour'];
+                $id = 'jour_' . $value;
                 echo "<script> setOption('" . $id . "'); </script>";
             }
             if (isset($_POST['mois']) and !empty($_POST['mois'])) {
-                $waarde = $_POST['mois'];
-                $id = 'mois_' . $waarde;
+                $value = $_POST['mois'];
+                $id = 'mois_' . $value;
                 echo "<script> setOption('" . $id . "'); </script>";
             }
             if (isset($_POST['annee']) and !empty($_POST['annee'])) {
-                $waarde = $_POST['annee'];
-                $id = 'annee_' . $waarde;
+                $value = $_POST['annee'];
+                $id = 'annee_' . $value;
                 echo "<script> setOption('" . $id . "'); </script>";
             }
             if (isset($_POST['courriel']) and !empty($_POST['courriel'])) {
-                $waarde = $_POST['courriel'];
+                $value = $_POST['courriel'];
                 $id = 'courriel';
-                echo "<script> setValue('" . $id . "','" . $waarde . "'); </script>";
+                echo "<script> setValue('" . $id . "','" . $value . "'); </script>";
             }
             if (isset($_POST['courriel_bis']) and !empty($_POST['courriel_bis'])) {
-                $waarde = $_POST['courriel_bis'];
+                $value = $_POST['courriel_bis'];
                 $id = 'courriel_bis';
-                echo "<script> setValue('" . $id . "','" . $waarde . "'); </script>";
+                echo "<script> setValue('" . $id . "','" . $value . "'); </script>";
             }
             foreach ($errorsArray as $error) {
                 echo "<script> error('" . $error . "'); </script>";
@@ -88,15 +87,15 @@ class Registration
     }
     public static function newUserRegistration(){
             $psersonne = new Personne;
-            $personne->setNom($_POST['nom']);
-            $personne->setPrenom($_POST['prenom']);
-            $personne->setPseudo($_POST['pseudo']);
-            $date_annif = $_POST['annee'] . "-" . $_POST['mois'] . "-" . $_POST['jour'];
-            $personne->setDate_anniversaire($date_annif);
-            $personne->setCourriel($_POST['courriel']);
-            $personne->setMot_de_passe($_POST['mot_de_passe']);
-            Database::connectPdodb($pdodb_name, $host, $username, $password);
-            Database::addPersonne($personne->getNom(), $personne->getPrenom(), $personne->getPseudo(), $personne->getDate_anniversaire(), $personne->getCourriel(), $personne->getMot_de_passe());
+            $person->setLastName($_POST['nom']);
+            $person->setFirstName($_POST['prenom']);
+            $person->setNickname($_POST['pseudo']);
+            $birthDate = $_POST['annee'] . "-" . $_POST['mois'] . "-" . $_POST['jour'];
+            $person->setBirthDate($birthDate);
+            $person->setEmail($_POST['courriel']);
+            $person->setPassword($_POST['mot_de_passe']);
+            Database::constructPDO($pdodb_name, $host, $username, $password);
+            Database::addPerson($person->getLastName(), $person->getFirstName(), $person->getNickname(), $person->getBirthDate(), $person->getEmail(), $person->getPassword());
             Manager::connection();
     }
 }

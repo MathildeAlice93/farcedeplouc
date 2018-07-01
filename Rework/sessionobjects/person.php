@@ -3,31 +3,31 @@
  * translate this to English
  **/
 
-class Personne
+class Person
 {
 	/*Attributs*/
 	private $id;
-	private $nom;
-	private $prenom;
-	private $pseudo;
-	private $date_anniversaire;
-	private $date_inscription;
-	private $courriel;
-	private $mot_de_passe;
+	private $lastName;
+	private $firstName;
+	private $nickname;
+	private $birthDay;
+	private $registrationDate;
+	private $email;
+	private $password;
 
 	/*Consturcteur de la classe personne*/
 
-	public function __construct($id = "", $nom = "", $prenom = "", $pseudo = "", $date_anniversaire = "", $date_inscription = "", $courriel = "", $mot_de_passe = "")
+	public function __construct($id = "", $lastName = "", $firstName = "", $nickname = "", $birthDay = "", $registrationDate = "", $email = "", $password = "")
 	{
 		$this->id = $id;
-		$this->nom = $nom;
-		/*$this sert à dire que le programme doit aller voir son attribut nom et lui attribuer la valeur dans la variable $nom*/
-		$this->prenom = $prenom;
-		$this->pseudo = $pseudo;
-		$this->date_anniversaire = $date_anniversaire;
-		$this->date_inscription = $date_inscription;
-		$this->courriel = $courriel;
-		$this->mot_de_passe = $mot_de_passe;
+		$this->lastName = $lastName;
+		/*$this sert à dire que le programme doit aller voir son attribut lastName et lui attribuer la valeur dans la variable $lastName*/
+		$this->firstName = $firstName;
+		$this->nickname = $nickname;
+		$this->birthDay = $birthDay;
+		$this->registrationDate = $registrationDate;
+		$this->email = $email;
+		$this->password = $password;
 	}
 
 	public function getId()
@@ -35,42 +35,42 @@ class Personne
 		return $this->id;
 	}
 
-	public function getNom()
+	public function getLastName()
 	{
-		return $this->nom;
+		return $this->lastName;
 	}
 
-	public function getPrenom()
+	public function getFirstName()
 	{
-		return $this->prenom;
+		return $this->firstName;
 	}
 
-	public function getPseudo()
+	public function getNickname()
 	{
-		return $this->pseudo;
+		return $this->nickname;
 	}
 
-	public function getDate_anniversaire()
+	public function getBirthDate()
 	{
-		if ($this->date_anniversaire != "") {
-			return $this->date_anniversaire;
+		if ($this->birthDay != "") {
+			return $this->birthDay;
 		}
 		return null;
 	}
 
-	public function getDate_inscription()
+	public function getRegistrationDate()
 	{
-		return $this->date_inscription;
+		return $this->registrationDate;
 	}
 
-	public function getCourriel()
+	public function getEmail()
 	{
-		return $this->courriel;
+		return $this->email;
 	}
 
-	public function getMot_de_passe()
+	public function getPassword()
 	{
-		return $this->mot_de_passe;
+		return $this->password;
 	}
 
 	public function setId($id)
@@ -78,38 +78,38 @@ class Personne
 		$this->id = $id;
 	}
 
-	public function setNom($nom)
+	public function setLastName($lastName)
 	{
-		$this->nom = $nom;
+		$this->lastName = $lastName;
 	}
 
-	public function setPrenom($prenom)
+	public function setFirstName($firstName)
 	{
-		$this->prenom = $prenom;
+		$this->firstName = $firstName;
 	}
 
-	public function setPseudo($pseudo)
+	public function setNickname($nickname)
 	{
-		$this->pseudo = $pseudo;
+		$this->nickname = $nickname;
 	}
 
-	public function setDate_anniversaire($date_anniversaire)
+	public function setBirthDate($birthDay)
 	{
-		$this->date_anniversaire = $date_anniversaire;
+		$this->birthDay = $birthDay;
 	}
 
-	public function setDate_inscription($date_inscription)
+	public function setRegistrationDate($registrationDate)
 	{
-		$this->date_inscription = $date_inscription;
+		$this->registrationDate = $registrationDate;
 	}
 
-	public function setCourriel($courriel)
+	public function setEmail($email)
 	{
-		$this->courriel = $courriel;
+		$this->email = $email;
 	}
 
-	public function setMot_de_passe($mot_de_passe)
+	public function setPassword($password)
 	{
-		$this->mot_de_passe = $mot_de_passe;
+		$this->password = $password;
 	}
 }

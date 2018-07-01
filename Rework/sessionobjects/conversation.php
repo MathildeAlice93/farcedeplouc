@@ -11,22 +11,22 @@ class Conversation
 {
 	/*Attributs*/
 	private $id;
-	private $date_creation;
-	private $titre;
+	private $creationDate;
+	private $title;
 	private $public;
-	private $membres;
+	private $members;
 	private $messages;
 
 	/*Consturcteur de la classe personne*/
 
-	public function __construct($id = "", $date_creation = null, $titre = "", $public = "", $membres = [], $messages = null)
+	public function __construct($id = "", $creationDate = null, $title = "", $public = "", $members = [], $messages = null)
 	{
 		$this->id = $id;
-		/*$this sert à dire que le programme doit aller voir son attribut nom et lui attribuer la valeur dans la variable $titre*/
-		$this->date_creation = $date_creation;
-		$this->titre = $titre;
+		/*$this sert à dire que le programme doit aller voir son attribut nom et lui attribuer la valeur dans la variable $title*/
+		$this->creationDate = $creationDate;
+		$this->title = $title;
 		$this->public = $public;
-		$this->membres = $membres;
+		$this->members = $members;
 		$this->messages = $messages;
 		//la structure de données de messages est celle obtenue apres un fetchAll
 	}
@@ -36,9 +36,9 @@ class Conversation
 		return $this->id;
 	}
 
-	public function getDate_creation()
+	public function getCreationDate()
 	{
-		return $this->titre;
+		return $this->creationDate;
 	}
 
 	public function getNom()
@@ -48,12 +48,12 @@ class Conversation
 
 	public function getPublic()
 	{
-		return $this->pseudo;
+		return $this->public;
 	}
 
 	public function getMembres()
 	{
-		return $this->membres;
+		return $this->members;
 	}
 	public function getMessages()
 	{
@@ -63,25 +63,24 @@ class Conversation
 	{
 		$this->id = $id;
 	}
-	public function setDate_creation($date_creation)
+	public function setCreationDate($creationDate)
 	{
-		$this->date_creation = $date_creation;
+		$this->creationDate = $creationDate;
 	}
-	public function setNom($titre)
+	public function setNom($title)
 	{
-		$this->titre = $titre;
+		$this->title = $title;
 	}
 	public function setPublic($public)
 	{
 		$this->public = $public;
 	}
-	public function setMembres($membres)
+	public function setMembres($members)
 	{
-		$this->membres = $membres;
+		$this->members = $members;
 	}
 	public function setMessages($messages)
 	{
 		$this->messages = $messages;
 	}
-
 }
