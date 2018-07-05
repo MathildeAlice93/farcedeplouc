@@ -18,8 +18,8 @@ class Registration
         if (!(isset($_POST['mois']) or !empty($_POST['mois']))) {
             $errorsArray['5'] = 'mois';
         }
-        if (!(isset($_POST['an']) or !empty($_POST['an']))) {
-            $errorsArray['6'] = 'an';
+        if (!(isset($_POST['annee']) or !empty($_POST['annee']))) {
+            $errorsArray['6'] = 'annee';
         }
         if (isset($_POST['courriel']) and !empty($_POST['courriel']) and isset($_POST['courriel_bis']) and !empty($_POST['courriel_bis'])) {
             if ($_POST['courriel'] != $_POST['courriel_bis']) {
@@ -86,7 +86,7 @@ class Registration
         }
     }
     public static function newUserRegistration(){
-            $psersonne = new Personne;
+            $person = new Person;
             $person->setLastName($_POST['nom']);
             $person->setFirstName($_POST['prenom']);
             $person->setNickname($_POST['pseudo']);
@@ -94,7 +94,6 @@ class Registration
             $person->setBirthDate($birthDate);
             $person->setEmail($_POST['courriel']);
             $person->setPassword($_POST['mot_de_passe']);
-            Database::constructPDO($pdodb_name, $host, $username, $password);
             Database::addPerson($person->getLastName(), $person->getFirstName(), $person->getNickname(), $person->getBirthDate(), $person->getEmail(), $person->getPassword());
             Manager::connection();
     }

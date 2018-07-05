@@ -14,6 +14,10 @@ class Manager
     }
     //On pourra déterminer plus tard si ça doit être public ou non
 
+    public static function home(){
+         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList);
+    }
+
 
 
 

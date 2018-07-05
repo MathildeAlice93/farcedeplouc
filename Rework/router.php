@@ -1,4 +1,5 @@
 <?php
+
 /* inclusions */
 include_once "database.php";
 include_once "sessionobjects/person.php";
@@ -19,6 +20,7 @@ if(!empty($_POST['submit'])){
     $submitExplodedValues = explode(":", $submitValue); 
     $handler = $submitExplodedValues[0];
     $action = $submitExplodedValues[1]; 
+    Database::constructPDO($dbName, $host, $username, $password);
     //... comment faire pour appeler une fonction a partir d'un string test
     $handler::$action();
 }
