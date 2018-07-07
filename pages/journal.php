@@ -29,6 +29,9 @@ FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 
 	?>
 	</table>
+
+
+
 	<?php 
 		echo "Liste des potes : "; 
 	?>
@@ -42,11 +45,16 @@ FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 			}
 	?>
 	</select>
+
+
+
 	<form method="POST">
 		<label for="recherche">Ma recherche de personne: </label>
 		<input type="text" name="recherche" placeholder="Qui veux-tu trouver?"/> 
 		<input type = "submit" name = "search_people" formaction = "router.php?handler=Session&action_du_plouc=recherche" value = "Lancer la recherche !" />
 	</form>
+
+
 
 	<?php 
 		echo "Amis en attente : "; 
@@ -64,5 +72,7 @@ FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
 				$key++;
 			}
 	?>
+
+	
 </body>
 </html> 

@@ -1,5 +1,5 @@
 window.onload = function() {
-    history.replaceState('', '', 'router.php?handler=Registration');
+    history.replaceState('', '', '');
 }
 function error($element_faux) {
     var elem = document.getElementById($element_faux);

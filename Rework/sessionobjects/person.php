@@ -10,21 +10,21 @@ class Person
 	private $lastName;
 	private $firstName;
 	private $nickname;
-	private $birthDay;
+	private $birthDate;
 	private $registrationDate;
 	private $email;
 	private $password;
 
 	/*Consturcteur de la classe personne*/
 
-	public function __construct($id = "", $lastName = "", $firstName = "", $nickname = "", $birthDay = "", $registrationDate = "", $email = "", $password = "")
+	public function __construct($id = "", $lastName = "", $firstName = "", $nickname = "", $birthDate = "", $registrationDate = "", $email = "", $password = "")
 	{
 		$this->id = $id;
 		$this->lastName = $lastName;
 		/*$this sert à dire que le programme doit aller voir son attribut lastName et lui attribuer la valeur dans la variable $lastName*/
 		$this->firstName = $firstName;
 		$this->nickname = $nickname;
-		$this->birthDay = $birthDay;
+		$this->birthDay = $birthDate;
 		$this->registrationDate = $registrationDate;
 		$this->email = $email;
 		$this->password = $password;
@@ -93,9 +93,9 @@ class Person
 		$this->nickname = $nickname;
 	}
 
-	public function setBirthDate($birthDay)
+	public function setBirthDate($birthDate)
 	{
-		$this->birthDay = $birthDay;
+		$this->birthDay = $birthDate;
 	}
 
 	public function setRegistrationDate($registrationDate)

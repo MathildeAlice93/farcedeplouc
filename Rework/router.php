@@ -7,6 +7,7 @@ include_once "sessionobjects/conversation.php";
 include_once "handlers/registration.php";
 include_once "pages/manager.php";
 include_once "pages/page.php"; 
+include_once "handlers/session.php";
 
 /* Paramètres de connexion par défaut pour wamp (donc différent sur Linux) */
 $dbName = "farce_de_plouc";
@@ -21,7 +22,6 @@ if(!empty($_POST['submit'])){
     $handler = $submitExplodedValues[0];
     $action = $submitExplodedValues[1]; 
     Database::constructPDO($dbName, $host, $username, $password);
-    //... comment faire pour appeler une fonction a partir d'un string test
     $handler::$action();
 }
 else{

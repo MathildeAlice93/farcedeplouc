@@ -3,11 +3,13 @@ class Page
 {
     private $headSegmentsList; 
     private $bodySegmentsList;
+    private $dictionary; 
 
-    public function __construct($headSegmentsList, $bodySegmentsList)
+    public function __construct($headSegmentsList, $bodySegmentsList, $dictionary)
     {
         $this->headSegmentsList = $headSegmentsList; 
         $this->bodySegmentsList = $bodySegmentsList;
+        $this->dictionnary = $dictionary; 
 
         $this->htmlOpen();
         $this->headOpen(); 

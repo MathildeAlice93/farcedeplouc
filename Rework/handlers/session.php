@@ -3,21 +3,6 @@ class Session
 {
     private static $connectedPerson;
 
-
-    public static function createSession()
-    {
-        if (session_status() == PHP_SESSION_NONE) 
-        {
-	        session_start();
-        }
-        if (isset($_SESSION['person'])) {
-            self::$connectedPerson = unserialize($_SESSION['person']);
-        } else {
-            self::$connectedPerson = new Person;
-            $_SESSION['person'] = serialize(self::$connectedPerson);
-        }
-    }
-    
     public static function connection() 
     {
         $isValidAttempt = 0b0;
@@ -31,41 +16,46 @@ class Session
 		if ($isValidAttempt == 0b11) {
 			$isThisPersonValid = Database::isValidPerson($_POST['connect_email'], $_POST['connect_mot_de_passe']);
 			if ($isThisPersonValid != false) {
+				session_start();
 				//boucle de principe, on est certain que isThisPersonValid ne contient qu'un seul élément
 				foreach ($isThisPersonValid as $row) {
-					self::$connectedPerson->setId($row['id']);
-					self::$connectedPerson->setNom($row['nom']);
-					self::$connectedPerson->setPrenom($row['prenom']);
-					self::$connectedPerson->setPseudo($row['pseudo']);
-					self::$connectedPerson->setDate_anniversaire($row['date_anniversaire']);
-					self::$connectedPerson->setDate_inscription($row['date_inscription']);
-					self::$connectedPerson->setCourriel($row['courriel']);
-					self::$connectedPerson->setMot_de_passe($row['mot_de_passe']);
+					self::getConnectedPerson()->setId($row['id']);
+					self::getConnectedPerson()->setLastName($row['nom']);
+					self::getConnectedPerson()->setFirstName($row['prenom']);
+					self::getConnectedPerson()->setNickname($row['pseudo']);
+					self::getConnectedPerson()->setBirthDate($row['date_anniversaire']);
+					self::getConnectedPerson()->setRegistrationDate($row['date_inscription']);
+					self::getConnectedPerson()->setEmail($row['courriel']);
+					self::getConnectedPerson()->setPassword($row['mot_de_passe']);
 				}
-				echo "<script>
-					window.onload = function() {
-						history.replaceState('', '', 'router.php?handler=Session&action_du_plouc=connexion');
-					}
-					</script>";
 
                 Manager::home();
 			} else {
-				//erreur (personne pas dans base de donnnées) (plus tard)
-				include_once "pages/connexion.php";
+				Manager::connection(); 
 			}
-		} else if(self::$connectedPerson->getId() != "") {
-			include_once "pages/journal.php";
+		} else if(self::getConnectedPerson()->getId() != "") {
+			Manager::home();
 		} else {
-			//traiter l'erreur plus tard (champs invalides)
-			include_once "pages/connexion.php";
+			Manager::connection(); 
 		}
-		break;
-    }
-
-
-    
-    //définir les autres attributs privés
-    //créer les fonctions qui contiendront, 
-    //entre autres, l'instanciation de personne.
+	}
+	
+	public static function getConnectedPerson() 
+	{
+		if(!isset(self::$connectedPerson))
+		{
+			if (session_status() != PHP_SESSION_NONE)
+			{
+				if (isset($_SESSION['person'])) {
+					self::$connectedPerson = unserialize($_SESSION['person']);
+				} else {
+					self::$connectedPerson = new Person;
+					$_SESSION['person'] = serialize(self::$connectedPerson);
+				}
+			}
+			//attention ici si on appelle cette fonction ailleurs, le if peut poser probleme
+		}
+		return self::$connectedPerson; 
+	}
 }
 ?>
