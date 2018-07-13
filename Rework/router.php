@@ -16,15 +16,17 @@ $host = "localhost";
 $username = "root";
 $password = "";
 
+
 if(!empty($_POST['submit'])){
     $submitValue = $_POST['submit']; 
     $submitExplodedValues = explode(":", $submitValue); 
     $handler = $submitExplodedValues[0];
     $action = $submitExplodedValues[1]; 
+    $arguments = array_slice($submitExplodedValues, 2); 
+    Session::setArguments($arguments);
     Database::constructPDO($dbName, $host, $username, $password);
     $handler::$action();
-}
-else{
+}else{
     Manager::connection(); 
 }
 

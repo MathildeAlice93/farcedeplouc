@@ -1,9 +1,17 @@
 <?php
 class Session 
 {
-    private static $connectedPerson;
+	private static $connectedPerson;
+	private static $arguments = NULL; 
 
-    public static function connection() 
+	//utilitaires
+	public static function setArguments($arguments)
+	{
+		self::$arguments = $arguments;
+	}
+
+	//actions
+    public static function accessHome() 
     {
         $isValidAttempt = 0b0;
 		/*0b0 est un nombre entier écrit sous forme binaire, dans ce cas-ci le nombre entier représenté est zéro.*/
@@ -56,6 +64,40 @@ class Session
 			//attention ici si on appelle cette fonction ailleurs, le if peut poser probleme
 		}
 		return self::$connectedPerson; 
+	}
+
+	public static function research()
+	{
+		if (isset($_POST['recherche']) and !empty($_POST['recherche'])) {
+			$myResearch = $_POST['recherche'];
+			$researchResults = Database::searchPeople($myResearch, self::$connectedPerson->getId());
+			Manager::recherche(); 
+		} else {
+			Manager::journal();
+		}
+	}
+
+	public static function requestTreatment() 
+	{
+		$subArguments = explode("_", self::$arguments[0]); 
+		if($subArguments[0] = "accept"){
+			$keyString = $subArguments[1];
+			$id = $_SESSION[$keyString];
+			$idConnectedPerson = self::$connectedPerson->getId();
+			Database::updateJoinPerson($idConnectedPerson, $id, 'confirme');
+			self::accessHome();
+		}
+		else if($subArguments[1] = "refuse"){
+			$keyString = $subArguments[1];
+			$id = $_SESSION[$keyString];
+			$idConnectedPerson = self::$connectedPerson->getId();
+			Database::updateJoinPerson($idConnectedPerson, $id, 'refuse');
+			self::accessHome();
+		}
+		else{
+			die("t'es trop nul sale hacker");
+		}
+		
 	}
 }
 ?>

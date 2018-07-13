@@ -20,6 +20,7 @@ class Manager
         $dictionary['person'] = Session::getConnectedPerson(); 
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]="friends.php"; 
+        $bodySegmentsList[1]="recherche.php"; 
         $bodySegmentsList[2] = "scriptlinks.html";
         
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
