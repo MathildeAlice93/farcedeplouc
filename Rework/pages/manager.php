@@ -19,23 +19,26 @@ class Manager
         $dictionary['title'] = "Journal"; 
         $dictionary['person'] = Session::getConnectedPerson(); 
         $headSegmentsList[0] = "head.php"; 
-        $bodySegmentsList[0]="friends.php"; 
-        $bodySegmentsList[1]="recherche.php"; 
-        $bodySegmentsList[2] = "scriptlinks.html";
+        $bodySegmentsList[0]= "menu.php"; 
+        $bodySegmentsList[1]="friends.php"; 
+        $bodySegmentsList[2]="recherche.php"; 
+        $bodySegmentsList[3]="pendingFriendRequests.php"; 
+        $bodySegmentsList[4] = "scriptlinks.html";
         
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }
 
-    public static function logOut(){
+    public static function research($researchResults){
+        $dictionary['title'] = "Recherche"; 
+        $dictionary['results']=$researchResults; 
+        $dictionary['person'] = Session::getConnectedPerson(); 
+        $headSegmentsList[0] = "head.php"; 
+        $bodySegmentsList[0]= "menu.php"; 
+        $bodySegmentsList[1]="recherche.php"; 
+        $bodySegmentsList[1]="results.php"; 
+        $bodySegmentsList[4] = "scriptlinks.html";
 
+        $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }
-
-    public static function messenger(){
-
-    }
-
-
-
-
 }
 ?>

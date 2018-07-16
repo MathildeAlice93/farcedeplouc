@@ -24,7 +24,6 @@ class Session
 		if ($isValidAttempt == 0b11) {
 			$isThisPersonValid = Database::isValidPerson($_POST['connect_email'], $_POST['connect_mot_de_passe']);
 			if ($isThisPersonValid != false) {
-				session_start();
 				//boucle de principe, on est certain que isThisPersonValid ne contient qu'un seul élément
 				foreach ($isThisPersonValid as $row) {
 					self::getConnectedPerson()->setId($row['id']);
@@ -36,7 +35,7 @@ class Session
 					self::getConnectedPerson()->setEmail($row['courriel']);
 					self::getConnectedPerson()->setPassword($row['mot_de_passe']);
 				}
-
+				$_SESSION['person'] = serialize(self::getConnectedPerson());
                 Manager::home();
 			} else {
 				Manager::connection(); 
@@ -58,7 +57,6 @@ class Session
 					self::$connectedPerson = unserialize($_SESSION['person']);
 				} else {
 					self::$connectedPerson = new Person;
-					$_SESSION['person'] = serialize(self::$connectedPerson);
 				}
 			}
 			//attention ici si on appelle cette fonction ailleurs, le if peut poser probleme
@@ -70,10 +68,10 @@ class Session
 	{
 		if (isset($_POST['recherche']) and !empty($_POST['recherche'])) {
 			$myResearch = $_POST['recherche'];
-			$researchResults = Database::searchPeople($myResearch, self::$connectedPerson->getId());
-			Manager::recherche(); 
+			$researchResults = Database::searchPeople($myResearch, self::getConnectedPerson()->getId());
+			Manager::research($researchResults); 
 		} else {
-			Manager::journal();
+			Manager::home();
 		}
 	}
 
@@ -83,21 +81,44 @@ class Session
 		if($subArguments[0] = "accept"){
 			$keyString = $subArguments[1];
 			$id = $_SESSION[$keyString];
-			$idConnectedPerson = self::$connectedPerson->getId();
+			$idConnectedPerson = self::getConnectedPerson()->getId();
 			Database::updateJoinPerson($idConnectedPerson, $id, 'confirme');
 			self::accessHome();
 		}
 		else if($subArguments[1] = "refuse"){
 			$keyString = $subArguments[1];
 			$id = $_SESSION[$keyString];
-			$idConnectedPerson = self::$connectedPerson->getId();
+			$idConnectedPerson = self::getConnectedPerson()->getId();
 			Database::updateJoinPerson($idConnectedPerson, $id, 'refuse');
 			self::accessHome();
 		}
 		else{
 			die("t'es trop nul sale hacker");
-		}
-		
+		}	
 	}
+
+	public static function logOut()
+	{
+		session_destroy(); 
+		//finaliser la déconnexion et suppression de cookies 
+		//documentation : php session_destroy / setcookie()
+		/*if (ini_get("session.use_cookies")) {
+			$params = session_get_cookie_params(); 
+			setcookie(session_name(), '', time() - 42000, 
+				$params["path"], $params["domain"],
+				$params["secure"], $params["httponly"]
+			); 
+		}*/
+		Manager::connection(); 
+    }
+
+	public static function messenger()
+	{
+		Manager::messenger(); 
+    }
+
+
+
+
 }
 ?>

@@ -144,7 +144,7 @@ class Database
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
-	public static function getPendingFriendsRequests($id, $limit, $offset = 0)
+	public static function getPendingFriendRequests($id, $limit, $offset = 0)
 	{
 		try
 		{

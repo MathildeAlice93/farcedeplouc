@@ -16,8 +16,8 @@ $host = "localhost";
 $username = "root";
 $password = "";
 
-
 if(!empty($_POST['submit'])){
+    session_start();
     $submitValue = $_POST['submit']; 
     $submitExplodedValues = explode(":", $submitValue); 
     $handler = $submitExplodedValues[0];
