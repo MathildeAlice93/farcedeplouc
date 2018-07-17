@@ -3,6 +3,7 @@ class Session
 {
 	private static $connectedPerson;
 	private static $arguments = NULL; 
+	private static $currentConversation; 
 
 	//utilitaires
 	public static function setArguments($arguments)
@@ -114,11 +115,9 @@ class Session
 
 	public static function messenger()
 	{
-		Manager::messenger(); 
-    }
-
-
-
-
+		$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
+		Manager::messenger($conversations); 
+	}
+	
 }
 ?>

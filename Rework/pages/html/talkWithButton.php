@@ -1,4 +1,4 @@
-<form method='POST'>";
+<form method='POST'>
     <td> 
     <button type='submit' name='submit' value = "Session:messenger:key<?php $key ?>">Causer ac mon pote!</button> 
     </td>

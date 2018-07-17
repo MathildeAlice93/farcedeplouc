@@ -21,7 +21,7 @@ class Manager
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]= "menu.php"; 
         $bodySegmentsList[1]="friends.php"; 
-        $bodySegmentsList[2]="recherche.php"; 
+        $bodySegmentsList[2]="research.php"; 
         $bodySegmentsList[3]="pendingFriendRequests.php"; 
         $bodySegmentsList[4] = "scriptlinks.html";
         
@@ -30,12 +30,28 @@ class Manager
 
     public static function research($researchResults){
         $dictionary['title'] = "Recherche"; 
-        $dictionary['results']=$researchResults; 
+        $dictionary['results']= $researchResults; 
         $dictionary['person'] = Session::getConnectedPerson(); 
+        $dictionary['include']= "result.php"; 
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]= "menu.php"; 
-        $bodySegmentsList[1]="recherche.php"; 
-        $bodySegmentsList[1]="results.php"; 
+        $bodySegmentsList[1]="research.php"; 
+        $bodySegmentsList[2]="results.php"; 
+        $bodySegmentsList[3] = "scriptlinks.html";
+
+        $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
+    }
+
+    public static function messenger($conversations){
+        $dictionary['title'] = "Messenger"; 
+        $dictionary['person'] = Session::getConnectedPerson(); 
+        $dictionary['conversations'] = $conversations;
+        $dictionary['include'] = 'messengerResult.php'; 
+        $headSegmentsList[0] = "head.php"; 
+        $bodySegmentsList[0]= "menu.php"; 
+        $bodySegmentsList[1]="messengerResearch.php"; 
+        $bodySegmentsList[2]="results.php"; 
+        $bodySegmentsList[3]="messenger.php"; 
         $bodySegmentsList[4] = "scriptlinks.html";
 
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
