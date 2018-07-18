@@ -42,17 +42,19 @@ class Manager
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }
 
-    public static function messenger($conversations){
+    public static function messenger($conversations, $currentConversation=NULL){
         $dictionary['title'] = "Messenger"; 
         $dictionary['person'] = Session::getConnectedPerson(); 
         $dictionary['conversations'] = $conversations;
         $dictionary['include'] = 'messengerResult.php'; 
+        $dictionary['currentConversation']= Session::getCurrentConversation(); 
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]= "menu.php"; 
         $bodySegmentsList[1]="messengerResearch.php"; 
-        $bodySegmentsList[2]="results.php"; 
-        $bodySegmentsList[3]="messenger.php"; 
-        $bodySegmentsList[4] = "scriptlinks.html";
+        //$bodySegmentsList[2]="results.php"; 
+        $bodySegmentsList[3]="conversations.php"; 
+        $bodySegmentsList[4]="messenger.php"; 
+        $bodySegmentsList[5] = "scriptlinks.html";
 
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }

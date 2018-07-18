@@ -20,6 +20,7 @@ if(!empty($_POST['submit'])){
     session_start();
     $submitValue = $_POST['submit']; 
     $submitExplodedValues = explode(":", $submitValue); 
+    var_dump($submitExplodedValues);
     $handler = $submitExplodedValues[0];
     $action = $submitExplodedValues[1]; 
     $arguments = array_slice($submitExplodedValues, 2); 

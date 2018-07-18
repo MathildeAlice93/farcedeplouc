@@ -41,17 +41,12 @@ class Conversation
 		return $this->creationDate;
 	}
 
-	public function getNom()
-	{
-		return $this->prenom;
-	}
-
 	public function getPublic()
 	{
 		return $this->public;
 	}
 
-	public function getMembres()
+	public function getMembers()
 	{
 		return $this->members;
 	}
@@ -67,7 +62,7 @@ class Conversation
 	{
 		$this->creationDate = $creationDate;
 	}
-	public function setNom($title)
+	public function setTitle($title)
 	{
 		$this->title = $title;
 	}
@@ -75,7 +70,7 @@ class Conversation
 	{
 		$this->public = $public;
 	}
-	public function setMembres($members)
+	public function setMembers($members)
 	{
 		$this->members = $members;
 	}

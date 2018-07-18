@@ -5,8 +5,8 @@
 <?php
         $friends = Database::getRelatedPersonByStatus($dictionary['person']->getId(),'confirme',7);
         foreach($friends as $friend){
-            $nickname=$friend['pseudo'];
-            echo "<option value='$nickname'>$nickname</option>"; 
-        }
+            $nickname=$friend['pseudo']; ?>
+            <option value='$nickname'><?php echo $nickname; ?></option>
+        <?php }
 ?>
 </select>
