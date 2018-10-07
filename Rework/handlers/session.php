@@ -47,6 +47,32 @@ class Session
 			Manager::connection(); 
 		}
 	}
+
+	public static function addFriend()
+	{
+		if (isset(self::$arguments[0]) and strpos(self::$arguments[0], 'key')==0) {
+			$idNewFriend = $_SESSION[self::$arguments[0]]; 
+			Database::addJoinPerson(self::getConnectedPerson()->getId(), $idNewFriend, 'en_attente');
+			$addedFriend = Database::getPerson($idNewFriend);
+			Manager::research($addedFriend);
+		} else {
+			Manager::home();
+		}		
+	}
+
+	// case 'ajouter_un_pote':
+	// 	if (isset($_POST['tralala']) and $_POST['tralala']!="") {
+	// 		$keyString='key'.$_POST['tralala'];
+	// 		$mon_nouveau_pote = $_SESSION[$keyString];
+	// 		FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+	// 		$id_demandeur = $plouc_connecte->getId();
+	// 		FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "en_attente");
+	// 		include_once "pages/journal.php";
+	// 	} else {
+	// 		// erreur pas de recherche faite (plus tard)
+	// 		include_once "pages/journal.php";
+	// 	}
+	// 	break;
 	
 	public static function getConnectedPerson() 
 	{

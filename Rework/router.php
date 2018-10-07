@@ -1,6 +1,6 @@
 <?php
 
-/* inclusions */
+/* inclusions des différentes classes */
 include_once "database.php";
 include_once "sessionobjects/person.php";
 include_once "sessionobjects/conversation.php";

@@ -109,7 +109,7 @@ class Database
 		try
 		{
 			$statement = self::$pdo->prepare(
-				"SELECT *
+				"SELECT id, nom, prenom, pseudo, date_anniversaire, courriel
 					FROM personne
 					WHERE (personne.nom = :wanted_plouc OR personne.pseudo = :wanted_plouc OR personne.prenom = :wanted_plouc) AND personne.id <> :ma_variable_id;"
 			);
