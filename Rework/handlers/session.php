@@ -175,8 +175,8 @@ class Session
 		self::$currentConversation->setMessages(Database::getAllMessagesFromConversation(self::$currentConversation->getId()));
 		$members = Database::getConversationMembers(self::$currentConversation->getId());
 		$membersList = [];
-		foreach ($membersList as $member) {
-			$memberPerson = new Personne($id = $member['id'], $nom = $member['nom'], $prenom = $member['prenom'], $pseudo = $member['pseudo']);
+		foreach ($members as $member) {
+			$memberPerson = new Person($id = $member['id'], $nom = $member['nom'], $prenom = $member['prenom'], $pseudo = $member['pseudo']);
 			$membersList[] = $memberPerson;
 		}
 		self::$currentConversation->setMembers($membersList);
