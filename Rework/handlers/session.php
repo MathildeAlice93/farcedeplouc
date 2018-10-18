@@ -131,6 +131,31 @@ class Session
 		}*/
 	}
 
+	public static function postMessage(){
+		if(isset($_SESSION['currentConversation']) and !empty($_SESSION['currentConversation'])){
+			$idConnectedPerson = self::getConnectedPerson()->getId();
+			self::$currentConversation = unserialize($_SESSION['currentConversation']); 
+			$idCurrentConversation = self::$currentConversation->getId();
+			$myMessage = $_POST['new_message']; 
+			Database::postMessage($idConnectedPerson, $idCurrentConversation, $myMessage);
+			//$updatedCurrentConversation = 
+			$conversations = Database::getUserConversations($idConnectedPerson);
+		
+			$_SESSION['currentConversation']=serialize(self::$currentConversation);
+			Manager::messenger($conversations, self::$currentConversation);
+		} else {
+			echo 'to be continued - todo : define error message and erro handling';
+		}
+		/*FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
+		$current_conversation = unserialize($_SESSION['current_conversation']);
+		$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
+		$contenu_post = $_POST['nouveau_message'];
+		FarceDePloucDbUtilities::postMessage($plouc_connecte->getId(), $current_conversation->getId(), $contenu_post);
+		$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
+		include_once "pages/messenger.php";
+		break;*/
+	}
+
 	public static function requestTreatment() 
 	{
 		$subArguments = explode("_", self::$arguments[0]);  
@@ -172,6 +197,7 @@ class Session
 		$idConnectedPerson = self::getConnectedPerson()->getId();
 		self::$currentConversation = new Conversation; 
 		self::$currentConversation->setId($idConversation); 
+		var_dump(self::$currentConversation); 
 		self::$currentConversation->setMessages(Database::getAllMessagesFromConversation(self::$currentConversation->getId()));
 		$members = Database::getConversationMembers(self::$currentConversation->getId());
 		$membersList = [];

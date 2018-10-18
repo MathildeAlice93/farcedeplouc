@@ -11,5 +11,11 @@ if(isset($dictionary['currentConversation']))
             </div>
         <?php }
     }
+    ?>
+    <form method="POST">
+        <textarea name="new_message" placeholder="Wanna say somethin' ?" rows="3" cols="30"></textarea>
+        <button type = "submit" name="submit" value = "Session:postMessage">Envoi!</button>
+    </form>
+    <?php
 }
-?> 
+?>   
