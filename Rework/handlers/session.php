@@ -54,25 +54,35 @@ class Session
 			$idNewFriend = $_SESSION[self::$arguments[0]]; 
 			Database::addJoinPerson(self::getConnectedPerson()->getId(), $idNewFriend, 'en_attente');
 			$addedFriend = Database::getPerson($idNewFriend);
-			Manager::research($addedFriend);
+			Manager::research($addedFriend, 'people');
 		} else {
 			Manager::home();
 		}		
 	}
 
-	// case 'ajouter_un_pote':
-	// 	if (isset($_POST['tralala']) and $_POST['tralala']!="") {
-	// 		$keyString='key'.$_POST['tralala'];
-	// 		$mon_nouveau_pote = $_SESSION[$keyString];
+	// case 'ajouter_pote_dans_convers':
+	// 	if (isset($_POST['tralala']) and !empty($_POST['tralala'])) {
 	// 		FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-	// 		$id_demandeur = $plouc_connecte->getId();
-	// 		FarceDePloucDbUtilities::addJoint_personne($id_demandeur, $mon_nouveau_pote, "en_attente");
-	// 		include_once "pages/journal.php";
-	// 	} else {
-	// 		// erreur pas de recherche faite (plus tard)
-	// 		include_once "pages/journal.php";
+	// 		$personne_ajoutee_a_discu = $_POST['tralala'];
+	// 		$current_conversation = unserialize($_SESSION['current_conversation']);
+	// 		$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
+	// 		FarceDePloucDbUtilities::addMemberToConversation($personne_ajoutee_a_discu, $current_conversation->getId());
+	// 		include_once "pages/messenger.php";
 	// 	}
 	// 	break;
+
+	public static function addFriendForConversation()
+	{
+		if (isset(self::$arguments[0]) and strpos(self::$arguments[0], 'key')==0) {
+			$idFriendForConversation = $_SESSION[self::$arguments[0]]; 
+			Database::addMemberToConversation($idFriendForConversation, self::getCurrentConversation()->getId());
+			$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
+			$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
+			Manager::messenger($conversations, self::getCurrentConversation());
+		} else {
+			Manager::home();
+		}		
+	}
 	
 	public static function getConnectedPerson() 
 	{
@@ -93,6 +103,18 @@ class Session
 
 	public static function getCurrentConversation()
 	{
+		if(!isset(self::$currentConversation))
+		{
+			if (session_status() != PHP_SESSION_NONE)
+			{
+				if (isset($_SESSION['currentConversation'])) {
+					self::$currentConversation = unserialize($_SESSION['currentConversation']);
+				} else {
+					self::$currentConversation = new Conversation;
+				}
+			}
+			//attention ici si on appelle cette fonction ailleurs, le if peut poser probleme
+		}
 		return self::$currentConversation;
 	}
 
@@ -112,48 +134,25 @@ class Session
     }	
 
 	public static function messenger()
+	//pas correct: ne charge pas les messages
 	{
 		$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
 		Manager::messenger($conversations); 
 	}
 
-	public static function messengerResearch()
-	{
-		/*if (isset($_POST['recherche']) and !empty($_POST['recherche'])) {
-			$ma_recherche = $_POST['recherche'];
-			FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-			$current_conversation = unserialize($_SESSION['current_conversation']);
-			$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
-			$affichage_personne = FarceDePloucDbUtilities::searchPeople($ma_recherche, $plouc_connecte->getId());
-			include_once "pages/messenger.php";
-		} else {
-			Manager::messenger()
-		}*/
-	}
-
 	public static function postMessage(){
 		if(isset($_SESSION['currentConversation']) and !empty($_SESSION['currentConversation'])){
 			$idConnectedPerson = self::getConnectedPerson()->getId();
-			self::$currentConversation = unserialize($_SESSION['currentConversation']); 
-			$idCurrentConversation = self::$currentConversation->getId();
-			$myMessage = $_POST['new_message']; 
+			$idCurrentConversation = self::getCurrentConversation()->getId();
+			$myMessage = $_POST['newMessage']; 
 			Database::postMessage($idConnectedPerson, $idCurrentConversation, $myMessage);
-			//$updatedCurrentConversation = 
 			$conversations = Database::getUserConversations($idConnectedPerson);
-		
-			$_SESSION['currentConversation']=serialize(self::$currentConversation);
-			Manager::messenger($conversations, self::$currentConversation);
+			self::getCurrentConversation()->setMessages(Database::getAllMessagesFromConversation($idCurrentConversation));
+			$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
+			Manager::messenger($conversations, self::getCurrentConversation());
 		} else {
 			echo 'to be continued - todo : define error message and erro handling';
 		}
-		/*FarceDePloucDbUtilities::connectPdodb($pdodb_name, $host, $username, $password);
-		$current_conversation = unserialize($_SESSION['current_conversation']);
-		$affichage_conversations = FarceDePloucDbUtilities::getConversations($plouc_connecte->getId());
-		$contenu_post = $_POST['nouveau_message'];
-		FarceDePloucDbUtilities::postMessage($plouc_connecte->getId(), $current_conversation->getId(), $contenu_post);
-		$current_conversation->setMessages(FarceDePloucDbUtilities::getAllMessagesFromConversation($current_conversation->getId()));
-		include_once "pages/messenger.php";
-		break;*/
 	}
 
 	public static function requestTreatment() 
@@ -180,10 +179,21 @@ class Session
 	
 	public static function research()
 	{
-		if (isset($_POST['recherche']) and !empty($_POST['recherche'])) {
-			$myResearch = $_POST['recherche'];
+		if (isset($_POST['research']) and !empty($_POST['research'])) {
+			$myResearch = $_POST['research'];
 			$researchResults = Database::searchPeople($myResearch, self::getConnectedPerson()->getId());
-			Manager::research($researchResults); 
+			Manager::research($researchResults, 'people'); 
+		} else {
+			Manager::home();
+		}
+	}
+
+	public static function researchFriendsForConversation()
+	{
+		if (isset($_POST['research']) and !empty($_POST['research'])) {
+			$myResearch = $_POST['research'];
+			$researchResults = Database::searchFriendsForConversation($myResearch, self::getConnectedPerson()->getId(), self::getCurrentConversation()->getId());
+			Manager::research($researchResults, 'friendsForConversation'); 
 		} else {
 			Manager::home();
 		}
@@ -195,21 +205,20 @@ class Session
 		var_dump($subArguments); 
 		$idConversation = $_SESSION[$keyString];
 		$idConnectedPerson = self::getConnectedPerson()->getId();
-		self::$currentConversation = new Conversation; 
-		self::$currentConversation->setId($idConversation); 
-		var_dump(self::$currentConversation); 
-		self::$currentConversation->setMessages(Database::getAllMessagesFromConversation(self::$currentConversation->getId()));
-		$members = Database::getConversationMembers(self::$currentConversation->getId());
+		self::getCurrentConversation()->setId($idConversation); 
+		var_dump(self::getCurrentConversation()); 
+		self::getCurrentConversation()->setMessages(Database::getAllMessagesFromConversation(self::getCurrentConversation()->getId()));
+		$members = Database::getConversationMembers(self::getCurrentConversation()->getId());
 		$membersList = [];
 		foreach ($members as $member) {
 			$memberPerson = new Person($id = $member['id'], $nom = $member['nom'], $prenom = $member['prenom'], $pseudo = $member['pseudo']);
 			$membersList[] = $memberPerson;
 		}
-		self::$currentConversation->setMembers($membersList);
+		self::getCurrentConversation()->setMembers($membersList);
 		$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
 		//previous line might be useless
-		$_SESSION['currentConversation']=serialize(self::$currentConversation);
-		Manager::messenger($conversations, self::$currentConversation);
+		$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
+		Manager::messenger($conversations, self::getCurrentConversation());
 	}
 }
 ?>

@@ -122,6 +122,29 @@ class Database
 			die('Erreur : ' . $e->getMessage());
 		}
 	}
+
+	public static function searchFriendsForConversation($userSearch, $idConnectedUser, $idCurrentConversation)
+	{
+		try
+		{
+			$statement = self::$pdo->prepare(
+				"SELECT id, nom, prenom, pseudo, date_anniversaire, courriel
+					FROM personne, joint_personne
+					WHERE (id_demandeur = :id_connected_person AND id_receveur = personne.id OR id_demandeur = personne.id AND id_receveur = :id_connected_person)
+						AND (personne.nom = :searched_person OR personne.pseudo = :searched_person OR personne.prenom = :searched_person) 
+						AND personne.id <> :id_connected_person
+						AND personne.id NOT IN (SELECT id_personne FROM joint_conversation_personne WHERE id_conversation = :id_current_conversation);"
+			);
+			$statement->execute(array(
+				'searched_person' => $userSearch,
+				'id_connected_person' => $idConnectedUser,
+				'id_current_conversation' => $idCurrentConversation
+			));
+			return $statement->fetchAll();
+		} catch (Exception $e) {
+			die('Erreur : ' . $e->getMessage());
+		}
+	}
 	/* fonctions relatives à la relation entre personnes (table join_person) */
 	public static function addJoinPerson($idRequestor, $idReceiver, $status)
 	{
