@@ -18,6 +18,7 @@ class Manager
     public static function home(){
         $dictionary['title'] = "Journal"; 
         $dictionary['person'] = Session::getConnectedPerson(); 
+        $dictionary['researchType']='researchPeople'; 
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]= "menu.php"; 
         $bodySegmentsList[1]="friends.php"; 
@@ -28,18 +29,12 @@ class Manager
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }
 
-    public static function research($researchResults, $researchType){
+    public static function research($researchResults){
         $dictionary['title'] = "Recherche"; 
         $dictionary['results']= $researchResults; 
         $dictionary['person'] = Session::getConnectedPerson(); 
-        if($researchType == 'people'){
-            $dictionary['include']="resultPeople.php"; 
-        }else if($researchType == 'friendsForConversation'){
-            $dictionary['include']="resultFriendsForConversation.php"; 
-        }else{
-            die('error, incoherent research'); 
-        }
-        $dictionary['researchType']=$researchType; 
+        $dictionary['include']="resultPeople.php"; 
+        $dictionary['researchType']='researchPeople'; 
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]= "menu.php"; 
         $bodySegmentsList[1]="research.php";
@@ -49,19 +44,24 @@ class Manager
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }
 
-    public static function messenger($conversations, $currentConversation=NULL){
+    public static function messenger($conversations, $researchResults=NULL){
         $dictionary['title'] = "Messenger"; 
         $dictionary['person'] = Session::getConnectedPerson(); 
         $dictionary['conversations'] = $conversations;
-        //$dictionary['include'] = 'messengerResult.php'; 
-        $dictionary['currentConversation']= Session::getCurrentConversation(); 
+        if($researchResults!=NULL){
+            $dictionary['include'] = 'resultFriendsForConversation.php'; 
+            $bodySegmentsList[3]="results.php"; 
+            $dictionary['results']= $researchResults; 
+        }
+        $dictionary['currentConversation']= Session::getCurrentConversation();
+        $dictionary['researchType']='researchFriendsForConversation'; 
         $headSegmentsList[0] = "head.php"; 
         $bodySegmentsList[0]= "menu.php"; 
-        //$bodySegmentsList[1]="messengerResearch.php"; 
-        //$bodySegmentsList[2]="results.php"; 
-        $bodySegmentsList[1]="conversations.php"; 
-        $bodySegmentsList[2]="messenger.php"; 
-        $bodySegmentsList[3] = "scriptlinks.html";
+        $bodySegmentsList[1]="conversations.php";
+        $bodySegmentsList[2]="research.php"; 
+         
+        $bodySegmentsList[4]="messenger.php"; 
+        $bodySegmentsList[5] = "scriptlinks.html";
 
         $pageConnexion = new Page($headSegmentsList, $bodySegmentsList, $dictionary);
     }

@@ -26,10 +26,10 @@
         ?>	
         <form method='POST'>
             <td> 
-            <button type='submit' name='submit' value='Session:switchConversation:open_key<?php echo $key; ?>'>Ouvrir conversation</button>
+            <button type='submit' name='submit' value='Session:switchConversation:open_conversation<?php echo $key; ?>'>Ouvrir conversation</button>
             </td>	
             <?php 
-            $keyString = "key".$key;
+            $keyString = "conversation".$key;
             $_SESSION[$keyString] = $conversation['id'];
             ?>
         </form>	

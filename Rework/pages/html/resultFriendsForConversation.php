@@ -6,10 +6,10 @@
 
 <form method='POST'>
 <td> 
-<button type='submit' name='submit' value = "Session:addFriendForConversation:key<?php echo $key ?>">Ajouter mon ami à la conversation</button>
+<button type='submit' name='submit' value = "Session:addFriendForConversation:person<?php echo $key ?>">Ajouter mon ami à la conversation</button>
 </td>
 <?php 
-$keyString = 'key'.$key;
+$keyString = 'person'.$key;
 $_SESSION[$keyString]=$idResult;
 ?>
 </form>	

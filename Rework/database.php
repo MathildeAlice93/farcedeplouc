@@ -412,6 +412,7 @@ class Database
 	public static function privateConversationExistence($idConnectedUser, $idInterlocutor)
 	{
 		//probleme si conversation groupe perd membres jusque 2 => conflit entre conversation privée et groupe conversation de 2 personnes (lequel sera choisi par cette fonction?)
+		//solution : flag pour conversation privee ou de groupe
 		try
 		{
 			$idMax = max($idConnectedUser, $idInterlocutor);

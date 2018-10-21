@@ -8,10 +8,10 @@ if (!($relationshipStatus == 'confirme' || $relationshipStatus =='en_attente'))
 { ?>
     <form method='POST'>
     <td> 
-    <button type='submit' name='submit' value = "Session:addFriend:key<?php echo $key ?>">Ajouter un ami!</button>
+    <button type='submit' name='submit' value = "Session:addFriend:person<?php echo $key ?>">Ajouter un ami!</button>
     </td>
     <?php 
-    $keyString = 'key'.$key;
+    $keyString = 'person'.$key;
     $_SESSION[$keyString]=$idResult;
     ?>
 </form>	
@@ -19,10 +19,10 @@ if (!($relationshipStatus == 'confirme' || $relationshipStatus =='en_attente'))
 } else if ($relationshipStatus =='confirme'){ ?>
     <form method='POST'>
     <td> 
-    <button type='submit' name='submit' value = "Session:messenger:key<?php echo $key ?>">Causer ac mon pote!</button> 
+    <button type='submit' name='submit' value = "Session:messenger:person<?php echo $key ?>">Causer ac mon pote!</button> 
     </td>
     <?php
-    $keyString = 'key'.$key;
+    $keyString = 'person'.$key;
     $_SESSION[$keyString]=$idResult;
     ?>
 </form>	

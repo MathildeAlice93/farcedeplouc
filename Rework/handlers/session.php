@@ -50,11 +50,11 @@ class Session
 
 	public static function addFriend()
 	{
-		if (isset(self::$arguments[0]) and strpos(self::$arguments[0], 'key')==0) {
+		if (isset(self::$arguments[0]) and strpos(self::$arguments[0], 'person')==0) {
 			$idNewFriend = $_SESSION[self::$arguments[0]]; 
 			Database::addJoinPerson(self::getConnectedPerson()->getId(), $idNewFriend, 'en_attente');
 			$addedFriend = Database::getPerson($idNewFriend);
-			Manager::research($addedFriend, 'people');
+			Manager::research($addedFriend);
 		} else {
 			Manager::home();
 		}		
@@ -74,11 +74,11 @@ class Session
 	public static function addFriendForConversation()
 	{
 		if (isset(self::$arguments[0]) and strpos(self::$arguments[0], 'key')==0) {
-			$idFriendForConversation = $_SESSION[self::$arguments[0]]; 
+			$idFriendForConversation = $_SESSION[self::$arguments[0]];
 			Database::addMemberToConversation($idFriendForConversation, self::getCurrentConversation()->getId());
 			$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
 			$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
-			Manager::messenger($conversations, self::getCurrentConversation());
+			Manager::messenger($conversations);
 		} else {
 			Manager::home();
 		}		
@@ -134,10 +134,32 @@ class Session
     }	
 
 	public static function messenger()
-	//pas correct: ne charge pas les messages
 	{
 		$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
-		Manager::messenger($conversations); 
+		$keyString = self::$arguments[0];
+		if(isset($keyString) and strpos($keyString, 'person')==0) {
+			$idPerson = $_SESSION[$keyString];
+			$idPrivateConversationArray = Database::privateConversationExistence(self::getConnectedPerson()->getId(),$idPerson); 
+			if(!empty($idPrivateConversationArray)){
+				$idConversation = $idPrivateConversationArray[0][0];
+			}else{
+				$idConversation = Database::createConversationWith(0, array($idPerson, self::getConnectedPerson()->getId()));
+			}
+			self::getCurrentConversation()->setId($idConversation); 
+			self::getCurrentConversation()->setMessages(Database::getAllMessagesFromConversation(self::getCurrentConversation()->getId()));
+			$members = Database::getConversationMembers(self::getCurrentConversation()->getId());
+			$membersList = [];
+			foreach ($members as $member) {
+				$memberPerson = new Person($id = $member['id'], $nom = $member['nom'], $prenom = $member['prenom'], $pseudo = $member['pseudo']);
+				$membersList[] = $memberPerson;
+			}
+			self::getCurrentConversation()->setMembers($membersList);
+			$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
+			Manager::messenger($conversations); 
+		}else{
+			Manager::home();
+		}
+
 	}
 
 	public static function postMessage(){
@@ -149,7 +171,7 @@ class Session
 			$conversations = Database::getUserConversations($idConnectedPerson);
 			self::getCurrentConversation()->setMessages(Database::getAllMessagesFromConversation($idCurrentConversation));
 			$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
-			Manager::messenger($conversations, self::getCurrentConversation());
+			Manager::messenger($conversations);
 		} else {
 			echo 'to be continued - todo : define error message and erro handling';
 		}
@@ -177,12 +199,12 @@ class Session
 		}	 
 	} 
 	
-	public static function research()
+	public static function researchPeople()
 	{
 		if (isset($_POST['research']) and !empty($_POST['research'])) {
 			$myResearch = $_POST['research'];
 			$researchResults = Database::searchPeople($myResearch, self::getConnectedPerson()->getId());
-			Manager::research($researchResults, 'people'); 
+			Manager::research($researchResults); 
 		} else {
 			Manager::home();
 		}
@@ -193,7 +215,8 @@ class Session
 		if (isset($_POST['research']) and !empty($_POST['research'])) {
 			$myResearch = $_POST['research'];
 			$researchResults = Database::searchFriendsForConversation($myResearch, self::getConnectedPerson()->getId(), self::getCurrentConversation()->getId());
-			Manager::research($researchResults, 'friendsForConversation'); 
+			$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
+			Manager::messenger($conversations, $researchResults); 
 		} else {
 			Manager::home();
 		}
@@ -202,23 +225,27 @@ class Session
 	public static function switchConversation(){
 		$subArguments = explode("_", self::$arguments[0]); 
 		$keyString = $subArguments[1];
-		var_dump($subArguments); 
-		$idConversation = $_SESSION[$keyString];
-		$idConnectedPerson = self::getConnectedPerson()->getId();
-		self::getCurrentConversation()->setId($idConversation); 
-		var_dump(self::getCurrentConversation()); 
-		self::getCurrentConversation()->setMessages(Database::getAllMessagesFromConversation(self::getCurrentConversation()->getId()));
-		$members = Database::getConversationMembers(self::getCurrentConversation()->getId());
-		$membersList = [];
-		foreach ($members as $member) {
-			$memberPerson = new Person($id = $member['id'], $nom = $member['nom'], $prenom = $member['prenom'], $pseudo = $member['pseudo']);
-			$membersList[] = $memberPerson;
-		}
-		self::getCurrentConversation()->setMembers($membersList);
-		$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
-		//previous line might be useless
-		$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
-		Manager::messenger($conversations, self::getCurrentConversation());
+		if (isset($keyString) and strpos($keyString, 'conversation')==0) {
+			var_dump($subArguments); 
+			$idConversation = $_SESSION[$keyString];
+			$idConnectedPerson = self::getConnectedPerson()->getId();
+			self::getCurrentConversation()->setId($idConversation); 
+			var_dump(self::getCurrentConversation()); 
+			self::getCurrentConversation()->setMessages(Database::getAllMessagesFromConversation(self::getCurrentConversation()->getId()));
+			$members = Database::getConversationMembers(self::getCurrentConversation()->getId());
+			$membersList = [];
+			foreach ($members as $member) {
+				$memberPerson = new Person($id = $member['id'], $nom = $member['nom'], $prenom = $member['prenom'], $pseudo = $member['pseudo']);
+				$membersList[] = $memberPerson;
+			}
+			self::getCurrentConversation()->setMembers($membersList);
+			$conversations = Database::getUserConversations(self::getConnectedPerson()->getId());
+			//previous line might be useless
+			$_SESSION['currentConversation']=serialize(self::getCurrentConversation());
+			Manager::messenger($conversations);
+		} else {
+			Manager::home();
+		}	
 	}
 }
 ?>
