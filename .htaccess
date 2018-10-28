@@ -1,21 +1,10 @@
+#Le fichier s'appelle .htaccess car Apache est configuré pour chercher un fichier de ce nom. 
+#Pour rappel ce fichier permet de créer des règles de nomenclature d'URL.
+#Attention le fichier intermédiaire nommé Rework va dans un second temps être supprimé, il faudra adapter RewriteBase à cela.
+#Windows n'est pas sensible à la casse pour le nom des dossiers et fichiers, contrairement à Linux.
+#ATTENTION : une fonctionnalité de PHP a été désactivée (GET), pour la remettre ajouter ceci après la rewrite rule: [QSA]
+#Inutile cependant d'écrire PT sur la deuxième car on capture une chaine vide, et on aura jamais d'alias sur un chaine vide
+
 RewriteEngine On
 RewriteBase "/farce_de_plouc/"
-RewriteRule "^router\.php(.*)$" "router.php?page=$1" [PT,QSA]
 RewriteRule "^$" "router.php"
-
-#ligne 1 sert à dire qu'on va pouvoir écrire des règles
-#Attention : ce n'est pas équivalent à l'activation du module 
-#Toutes les commandes suivant cette ligne sont activées par le RewriteEngine
-#Il existe d'autre commande du module Rewrite qui n'ont pas besoin de cette activation pour fonctionner
-#URL relative = URL relative à la racine du projet
-#Quand on travaille en URL rel il faut spécifier le dossier qui amène à la racine (ligne 2)
-#RewriteBase donne le chemin du projet àpd dossier 'www'
-#Ce code est différent sur chaque ordinateur
-#LIGNE 3 : contient une regex qui permet de capture l'URL dans la première partie
-#La capture sera enregistrée par (.*) qui signifie qu'on capture un nombre libre de caractère
-#le symbole $ signifie qu'on capture cela jusqu'à la fin 
-#Ensuite on réécrit l'URL pour le serveur en replaçant $1 par la première et unique capture (il pourrait y en avoir plusieurs)
-#L'attribut PT sert à prendre en compte les éventuels alias donné au noms de dossier
-#L'attribut QSA sert à récupérer les variables GET
-#Enlever cet attribut nous rendrait invulnérable à toute attaque URL potientielle mais nous empêche d'utiliser la technologie de GET
-#La deuxième rule permet de rajouter 'router.php' si jamais ya rien 

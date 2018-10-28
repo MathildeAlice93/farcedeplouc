@@ -9,11 +9,11 @@
                     $id=$pendingRequest['id'];
                 ?>
                 <li>
-                    <?php $nickname ?>
-                    <button type='submit' name='submit' value='Session:requestTreatment:accept_key<?php echo $key; ?>'>Accepter</button>
-                    <button type='submit' name='submit' value='Session:requestTreatment:refuse_key<?php echo $key; ?>'>Refuser</button>
+                    <?php echo $nickname; ?>
+                    <button type='submit' name='submit' value='Session:friendRequestTreatment:accept_person<?php echo $key; ?>'>Accepter</button>
+                    <button type='submit' name='submit' value='Session:friendRequestTreatment:refuse_person<?php echo $key; ?>'>Refuser</button>
                 </li>
-                <?php $keyString = 'key'.$key;
+                <?php $keyString = 'person'.$key;
                     $_SESSION[$keyString]=$id;
                 ?>
             </form>

@@ -177,7 +177,7 @@ class Session
 		}
 	}
 
-	public static function requestTreatment() 
+	public static function friendRequestTreatment() 
 	{
 		$subArguments = explode("_", self::$arguments[0]);  
 		if($subArguments[0] = "accept"){ 
